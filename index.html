@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tap2Pay - Arduino Science Fair Project</title>
+    <style>
+        /* ==================== RESET & VARIABLES ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-red: #FF3B3B;
+            --dark-gray: #1a1a1a;
+            --light-gray: #f5f5f5;
+            --white: #ffffff;
+            --card-bg: #2a2a2a;
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            --shadow-light: 0 5px 20px rgba(0, 0, 0, 0.1);
+            --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --glow: 0 0 20px rgba(255, 59, 59, 0.5);
+        }
+
+        /* ==================== BODY & GLOBALS ==================== */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #0a0a0a 100%);
+            color: var(--white);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ==================== CONTAINER & LAYOUT ==================== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* ==================== HEADER SECTION ==================== */
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .title {
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--primary-red);
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            animation: fadeInDown 0.8s ease-out, float 3s ease-in-out infinite;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            font-style: italic;
+            color: #aaa;
+            letter-spacing: 1px;
+            animation: fadeIn 1.2s ease-out 0.3s both;
+        }
+
+        /* ==================== MAIN LAYOUT ==================== */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        /* ==================== LEFT COLUMN - COMPONENTS ==================== */
+        .components-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: slideInLeft 0.6s ease-out;
+        }
+
+        .component-card {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: var(--transition);
+            overflow: hidden;
+            position: relative;
+            box-shadow: var(--shadow-light);
+            animation: slideInLeft 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .component-card:nth-child(1) { animation-delay: 0.1s; }
+        .component-card:nth-child(2) { animation-delay: 0.2s; }
+        .component-card:nth-child(3) { animation-delay: 0.3s; }
+        .component-card:nth-child(4) { animation-delay: 0.4s; }
+        .component-card:nth-child(5) { animation-delay: 0.5s; }
+
+        .component-card:hover {
+            border-color: var(--primary-red);
+            box-shadow: var(--glow), var(--shadow);
+            transform: translateY(-3px);
+        }
+
+        .component-card.expanded {
+            background: linear-gradient(135deg, var(--primary-red) 0%, #cc2f2f 100%);
+            box-shadow: var(--glow), var(--shadow);
+        }
+
+        .component-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .component-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .component-card.expanded .component-title {
+            color: var(--white);
+        }
+
+        .arrow-icon {
+            font-size: 1.5rem;
+            transition: var(--transition);
+            color: var(--primary-red);
+        }
+
+        .component-card:hover .arrow-icon {
+            color: var(--white);
+        }
+
+        .component-card.expanded .arrow-icon {
+            transform: rotate(180deg);
+            color: var(--white);
+        }
+
+        .component-description {
+            margin-top: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, margin-top 0.5s ease-out;
+            color: var(--light-gray);
+            line-height: 1.6;
+            opacity: 0;
+        }
+
+        .component-card.expanded .component-description {
+            max-height: 300px;
+            margin-top: 15px;
+            opacity: 1;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        /* ==================== RIGHT COLUMN - HOW IT WORKS ==================== */
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .how-it-works {
+            background: linear-gradient(135deg, var(--card-bg) 0%, #2a2a2a 100%);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow-light);
+            border-left: 4px solid var(--primary-red);
+            animation: slideInRight 0.6s ease-out;
+        }
+
+        .how-it-works-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .steps-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .step {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+            padding: 15px;
+            background: rgba(255, 59, 59, 0.05);
+            border-radius: 8px;
+            transition: var(--transition);
+            animation: fadeInUp 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .step:nth-child(1) { animation-delay: 0.5s; }
+        .step:nth-child(2) { animation-delay: 0.6s; }
+        .step:nth-child(3) { animation-delay: 0.7s; }
+        .step:nth-child(4) { animation-delay: 0.8s; }
+        .step:nth-child(5) { animation-delay: 0.9s; }
+
+        .step:hover {
+            background: rgba(255, 59, 59, 0.1);
+            transform: translateX(5px);
+        }
+
+        .step-number {
+            min-width: 35px;
+            height: 35px;
+            background: var(--primary-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--white);
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #ddd;
+            padding-top: 2px;
+        }
+
+        /* ==================== KEY FEATURES ==================== */
+        .key-features {
+            background: linear-gradient(135deg, rgba(42, 42, 42, 0.8) 0%, rgba(26, 26, 26, 0.8) 100%);
+            border-radius: 16px;
+            padding: 50px 40px;
+            box-shadow: var(--shadow);
+            margin-top: 60px;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+            border: 1px solid rgba(255, 59, 59, 0.1);
+        }
+
+        .features-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+
+        .feature-item {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 20px;
+            border-radius: 8px;
+            transition: var(--transition);
+            animation: fadeInUp 0.6s ease-out;
+            animation-fill-mode: both;
+            background: rgba(255, 59, 59, 0.05);
+            border: 1px solid rgba(255, 59, 59, 0.2);
+        }
+
+        .feature-item:nth-child(1) { animation-delay: 0.5s; }
+        .feature-item:nth-child(2) { animation-delay: 0.6s; }
+        .feature-item:nth-child(3) { animation-delay: 0.7s; }
+        .feature-item:nth-child(4) { animation-delay: 0.8s; }
+        .feature-item:nth-child(5) { animation-delay: 0.9s; }
+
+        .feature-item {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            text-align: center;
+            padding: 25px 20px;
+            border-radius: 12px;
+            transition: var(--transition);
+            animation: fadeInUp 0.6s ease-out;
+            animation-fill-mode: both;
+            background: linear-gradient(135deg, rgba(255, 59, 59, 0.08) 0%, rgba(255, 59, 59, 0.02) 100%);
+            border: 1px solid rgba(255, 59, 59, 0.15);
+        }
+
+        .feature-item:hover {
+            background: linear-gradient(135deg, rgba(255, 59, 59, 0.15) 0%, rgba(255, 59, 59, 0.08) 100%);
+            transform: translateY(-5px);
+            box-shadow: var(--glow), 0 10px 30px rgba(255, 59, 59, 0.2);
+            border-color: var(--primary-red);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-red);
+            min-width: auto;
+            text-align: center;
+        }
+
+        .feature-text {
+            font-size: 0.85rem;
+            color: #bbb;
+            line-height: 1.5;
+        }
+
+        .feature-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            margin-bottom: 5px;
+        }
+
+        /* ==================== ANIMATIONS ==================== */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* ==================== RESPONSIVE DESIGN ==================== */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .title {
+                font-size: 2.5rem;
+            }
+
+            .section-title,
+            .how-it-works-title,
+            .features-title {
+                font-size: 1.3rem;
+            }
+
+            .component-title {
+                font-size: 1.1rem;
+            }
+
+            .features-list {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .container {
+                padding: 30px 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 2rem;
+                letter-spacing: 1px;
+            }
+
+            .subtitle {
+                font-size: 0.85rem;
+            }
+
+            .section-title {
+                font-size: 1.1rem;
+            }
+
+            .component-title {
+                font-size: 1rem;
+            }
+
+            .how-it-works,
+            .key-features {
+                padding: 20px;
+            }
+
+            .features-list {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .feature-item {
+                padding: 18px 15px;
+            }
+
+            .feature-icon {
+                font-size: 2rem;
+            }
+
+            .step-number {
+                min-width: 30px;
+                height: 30px;
+                font-size: 0.8rem;
+            }
+
+            .step-text {
+                font-size: 0.85rem;
+            }
+
+            .feature-text {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* ==================== FOOTER ==================== */
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 59, 59, 0.2);
+            color: #888;
+            font-size: 0.9rem;
+            animation: fadeIn 1.5s ease-out 1s both;
+        }
+
+        .footer a {
+            color: var(--primary-red);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Tap2Pay</h1>
+            <p class="subtitle">By Zeyad, Zuhair, Baraa | Arduino Science Fair Project</p>
+        </div>
+
+        <!-- Main Content: Two Column Layout -->
+        <div class="main-content">
+            <!-- Left Column: Components -->
+            <div class="components-section">
+                <h2 class="section-title">Main Components</h2>
+
+                <!-- Component 1: Arduino Uno R3 -->
+                <div class="component-card">
+                    <div class="component-header">
+                        <span class="component-title">Arduino Uno R3</span>
+                        <span class="arrow-icon">▼</span>
+                    </div>
+                    <p class="component-description">The Arduino Uno R3 is the main controller of the entire Tap2Pay system. It manages communication between all hardware components, processes button input, receives data from the NFC reader, updates the OLED screen, and sends control signals to the servo motor. It also supplies power and ensures stable operation of the whole project.</p>
+                </div>
+
+                <!-- Component 2: NFC Card Reader -->
+                <div class="component-card">
+                    <div class="component-header">
+                        <span class="component-title">NFC Card Reader</span>
+                        <span class="arrow-icon">▼</span>
+                    </div>
+                    <p class="component-description">The NFC card reader detects NFC cards when they are placed near it. It reads stored information from the card and can write new data such as updated balance values. Each card acts like a digital wallet inside the system.</p>
+                </div>
+
+                <!-- Component 3: OLED Screen -->
+                <div class="component-card">
+                    <div class="component-header">
+                        <span class="component-title">OLED Screen</span>
+                        <span class="arrow-icon">▼</span>
+                    </div>
+                    <p class="component-description">The OLED screen displays all user interface elements. It shows menu options, balance amount, confirmations, and system messages, giving real-time feedback to the Card.</p>
+                </div>
+
+                <!-- Component 4: Tactile Push Buttons -->
+                <div class="component-card">
+                    <div class="component-header">
+                        <span class="component-title">Tactile Push Buttons</span>
+                        <span class="arrow-icon">▼</span>
+                    </div>
+                    <p class="component-description">Two tactile buttons allow navigation. The red button scrolls down through menu options. The green button confirms and selects options. This creates simple and intuitive control.</p>
+                </div>
+
+                <!-- Component 5: SG90 Servo Motor -->
+                <div class="component-card">
+                    <div class="component-header">
+                        <span class="component-title">SG90 Servo Motor</span>
+                        <span class="arrow-icon">▼</span>
+                    </div>
+                    <p class="component-description">The SG90 servo motor controls a small physical barrier. When the OPEN GATE option is selected, the servo rotates to lift the barrier, allowing the mini car to pass, then closes again.</p>
+                </div>
+            </div>
+
+            <!-- Right Column: How It Works & Key Features -->
+            <div class="right-column">
+                <!-- How It Works Section -->
+                <div class="how-it-works">
+                    <h2 class="how-it-works-title">How It Works</h2>
+                    <div class="steps-list">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-text">Tap any NFC card on the reader.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-text">OLED Screen displays menu: CHECK BALANCE, ADD MONEY, SPEND MONEY, OPEN GATE.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-text">Use buttons to navigate: Red = DOWN, Green = OK.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <div class="step-text">ADD MONEY / SPEND updates the virtual balance.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">5</div>
+                            <div class="step-text">OPEN GATE triggers the SG90 servo motor so the barrier opens and the mini car passes.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Features Section - Full Width Below Main Content -->
+        <div class="key-features">
+            <h2 class="features-title">Key Features</h2>
+            <div class="features-list">
+                <div class="feature-item">
+                    <span class="feature-icon">⚡</span>
+                    <div>
+                        <div class="feature-title">Interactive NFC Menu</div>
+                        <span class="feature-text">Contactless card recognition with instant response.</span>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">💰</span>
+                    <div>
+                        <div class="feature-title">Balance Simulation</div>
+                        <span class="feature-text">Add, spend, and track digital wallet funds in real-time.</span>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🚗</span>
+                    <div>
+                        <div class="feature-title">Gate Control System</div>
+                        <span class="feature-text">Motorized barrier opens with servo activation.</span>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🎮</span>
+                    <div>
+                        <div class="feature-title">Two-Button Navigation</div>
+                        <span class="feature-text">Simple red and green button menu control.</span>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">📱</span>
+                    <div>
+                        <div class="feature-title">OLED Feedback</div>
+                        <span class="feature-text">Crystal-clear display of all user interactions.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>🚀 Science Fair Project | Arduino-Powered NFC Payment System</p>
+            <p style="margin-top: 10px; font-size: 0.8rem;">© 2026 Tap2Pay Project | All Rights Reserved</p>
+        </div>
+    </div>
+
+    <!-- JavaScript for Interactivity -->
+    <script>
+        // ==================== COMPONENT CARD ACCORDION ==================== //
+        const componentCards = document.querySelectorAll('.component-card');
+
+        componentCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // Check if this card is already expanded
+                const isExpanded = this.classList.contains('expanded');
+
+                // Close all other cards
+                componentCards.forEach(c => {
+                    if (c !== this) {
+                        c.classList.remove('expanded');
+                    }
+                });
+
+                // Toggle current card
+                this.classList.toggle('expanded');
+            });
+        });
+
+        // ==================== SMOOTH SCROLL & PAGE LOAD EFFECTS ==================== //
+        // Ensure smooth animations on page load
+        window.addEventListener('load', function() {
+            // Animation triggers are handled by CSS
+            console.log('Tap2Pay website loaded successfully!');
+        });
+
+        // ==================== PREVENT SCROLLING INTERFERENCE ==================== //
+        // Smooth scroll behavior for better UX
+        document.documentElement.style.scrollBehavior = 'smooth';
+    </script>
+</body>
+</html>
