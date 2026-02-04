@@ -40,6 +40,29 @@
             overflow-x: hidden;
         }
 
+        /* ==================== LANGUAGE TOGGLE ==================== */
+        .lang-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, var(--primary-red), #ff6b6b);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: var(--shadow-light);
+            transition: var(--transition);
+            z-index: 1000;
+        }
+
+        .lang-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glow);
+        }
+
         /* ==================== CUSTOM SCROLLBAR ==================== */
         /* Webkit browsers (Chrome, Safari, Edge) */
         ::-webkit-scrollbar {
@@ -1341,6 +1364,7 @@
             pointer-events: none;
             z-index: 10;
         }
+
     </style>
 </head>
 <body>
@@ -1436,24 +1460,28 @@
             <div class="right-column">
                 <!-- How It Works Section -->
                 <div class="how-it-works">
-                    <h2 class="how-it-works-title">How It Works</h2>
+                    <h2 class="how-it-works-title" data-en="How It Works" data-ar="كيف يعمل">How It Works</h2>
                     <div class="steps-list">
                        
                         <div class="step">
                             <div class="step-number">1</div>
-                            <div class="step-text">OLED Screen displays menu: CHECK BALANCE, ADD MONEY, PAY MONEY, and OPEN BARRIER.</div>
+                            <div class="step-text" data-en="OLED Screen displays menu: CHECK BALANCE, ADD MONEY, PAY MONEY, and OPEN BARRIER." data-ar="تعرض شاشة OLED القائمة: التحقق من الرصيد، إضافة أموال، دفع أموال، وفتح الحاجز.">OLED Screen displays menu: CHECK BALANCE, ADD MONEY, PAY MONEY, and OPEN BARRIER.</div>
                         </div>
                         <div class="step">
                             <div class="step-number">2</div>
-                            <div class="step-text">Use buttons to navigate: Red = DOWN, Green = OK.</div>
+                            <div class="step-text" data-en="Use buttons to navigate: Red = DOWN, Green = OK." data-ar="استخدم الأزرار للتنقل: الأحمر = أسفل، الأخضر = موافق.">Use buttons to navigate: Red = DOWN, Green = OK.</div>
                         </div>
                         <div class="step">
                             <div class="step-number">3</div>
-                            <div class="step-text">Choose Options From The 4 Options CHECK BALANCE, ADD MONEY, PAY MONEY, and OPEN BARRIER.</div>
+                            <div class="step-text" data-en="Choose Options From The 4 Options CHECK BALANCE, ADD MONEY, PAY MONEY, and OPEN BARRIER." data-ar="اختر من الخيارات الأربعة: التحقق من الرصيد، إضافة أموال، دفع أموال، وفتح الحاجز.">Choose Options From The 4 Options CHECK BALANCE, ADD MONEY, PAY MONEY, and OPEN BARRIER.</div>
                         </div>
                         <div class="step">
                             <div class="step-number">4</div>
-                            <div class="step-text">After that follow the instructions on the screen depending on what option you choose.</div>
+                            <div class="step-text" data-en="After that follow the instructions on the screen depending on what option you choose." data-ar="بعد ذلك اتبع التعليمات على الشاشة بناءً على الخيار الذي اخترته.">After that follow the instructions on the screen depending on what option you choose.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
                         </div>
                     </div>
                 </div>
@@ -1462,41 +1490,41 @@
 
         <!-- Key Features Section - Full Width Below Main Content -->
         <div class="key-features">
-            <h2 class="features-title">Key Features</h2>
+            <h2 class="features-title" data-en="Key Features" data-ar="الميزات الرئيسية">Key Features</h2>
             <div class="features-list">
                 <div class="feature-item">
                     <span class="feature-icon">⚡</span>
                     <div>
-                        <div class="feature-title">Interactive NFC Menu</div>
-                        <span class="feature-text">Contactless card recognition with instant response.</span>
+                        <div class="feature-title" data-en="Interactive NFC Menu" data-ar="قائمة NFC تفاعلية">Interactive NFC Menu</div>
+                        <span class="feature-text" data-en="Contactless card recognition with instant response." data-ar="التعرف على البطاقة بدون تلامس مع استجابة فورية.">Contactless card recognition with instant response.</span>
                     </div>
                 </div>
                 <div class="feature-item">
                     <span class="feature-icon">💰</span>
                     <div>
-                        <div class="feature-title">Balance Simulation</div>
-                        <span class="feature-text">Add, Pay, and track digital wallet funds in real-time.</span>
+                        <div class="feature-title" data-en="Balance Simulation" data-ar="محاكاة الرصيد">Balance Simulation</div>
+                        <span class="feature-text" data-en="Add, Pay, and track digital wallet funds in real-time." data-ar="إضافة ودفع وتتبع أموال المحفظة الرقمية في الوقت الفعلي.">Add, Pay, and track digital wallet funds in real-time.</span>
                     </div>
                 </div>
                 <div class="feature-item">
                     <span class="feature-icon">🚗</span>
                     <div>
-                        <div class="feature-title">Gate Control System</div>
-                        <span class="feature-text">Motorized barrier opens with servo activation.</span>
+                        <div class="feature-title" data-en="Gate Control System" data-ar="نظام التحكم في البوابة">Gate Control System</div>
+                        <span class="feature-text" data-en="Motorized barrier opens with servo activation." data-ar="يفتح الحاجز الآلي بتفعيل محرك السيرفو.">Motorized barrier opens with servo activation.</span>
                     </div>
                 </div>
                 <div class="feature-item">
                     <span class="feature-icon">🎮</span>
                     <div>
-                        <div class="feature-title">Two-Button Navigation</div>
-                        <span class="feature-text">Simple red and green button menu control.</span>
+                        <div class="feature-title" data-en="Two-Button Navigation" data-ar="التنقل بزرين">Two-Button Navigation</div>
+                        <span class="feature-text" data-en="Simple red and green button menu control." data-ar="التحكم بقائمة بسيطة بالزر الأحمر والأخضر.">Simple red and green button menu control.</span>
                     </div>
                 </div>
                 <div class="feature-item">
                     <span class="feature-icon">📱</span>
                     <div>
-                        <div class="feature-title">OLED Feedback</div>
-                        <span class="feature-text">Crystal-clear display of all user interactions.</span>
+                        <div class="feature-title" data-en="OLED Feedback" data-ar="ردود فعل OLED">OLED Feedback</div>
+                        <span class="feature-text" data-en="Crystal-clear display of all user interactions." data-ar="عرض واضح تماماً لجميع تفاعلات المستخدم.">Crystal-clear display of all user interactions.</span>
                     </div>
                 </div>
             </div>
@@ -1514,7 +1542,7 @@
     </div>
 
     <button class="feedback-btn" id="feedbackBtn">
-        💬 Updates
+        💬 التحديثات
         <span class="feedback-badge" id="badgeCount" style="display: none;">0</span>
     </button>
 
@@ -1522,26 +1550,26 @@
     <div class="modal-overlay" id="feedbackModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Project Updates</h2>
+                <h2 class="modal-title" data-en="Project Updates" data-ar="تحديثات المشروع">Project Updates</h2>
                 <button class="modal-close" id="closeModal">&times;</button>
             </div>
 
             <div class="error-message" id="errorMessage"></div>
-            <div class="success-message" id="successMessage">✓ Your suggestion has been submitted for review!</div>
+            <div class="success-message" id="successMessage" data-en="✓ Your suggestion has been submitted for review!" data-ar="✓ تم إرسال اقتراحك للمراجعة!">✓ Your suggestion has been submitted for review!</div>
 
             <!-- Feedback Form -->
             <form class="feedback-form" id="feedbackForm">
                 <div class="form-group">
-                    <label class="form-label" for="suggestionTitle">Your Name or Title</label>
+                    <label class="form-label" for="suggestionTitle" data-en="Your Name or Title" data-ar="اسمك أو العنوان">Your Name or Title</label>
                     <input type="text" id="suggestionTitle" class="form-input" placeholder="e.g., Feature Idea, Bug Report" required>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="suggestionText">Your Suggestion or Update</label>
+                    <label class="form-label" for="suggestionText" data-en="Your Suggestion or Update" data-ar="اقتراحك أو تحديثك">Your Suggestion or Update</label>
                     <textarea id="suggestionText" class="form-textarea" placeholder="Share your ideas, suggestions, or updates..." required></textarea>
                 </div>
 
-                <button type="submit" class="submit-btn" id="submitBtn">
+                <button type="submit" class="submit-btn" id="submitBtn" data-en="Submit Suggestion" data-ar="إرسال الاقتراح">
                     <span class="loading-spinner" id="spinner" style="display: none;"></span>
                     Submit Suggestion
                 </button>
@@ -1549,7 +1577,7 @@
 
             <!-- Comments Section -->
             <div class="comments-section">
-                <h3 class="comments-title">All Submissions</h3>
+                <h3 class="comments-title" data-en="All Submissions" data-ar="جميع المقترحات">All Submissions</h3>
                 <div class="comments-list" id="commentsList">
                     <div class="no-comments">No updates yet. Be the first to suggest!</div>
                 </div>
@@ -1605,6 +1633,266 @@
             });
         });
 
+        // ==================== TRANSLATION SYSTEM ==================== //
+        let currentLang = localStorage.getItem('lang') || 'en';
+
+        const translations = {
+            en: {
+                authSubtitle: 'Sign in to access the project',
+                selectRole: 'Select Role',
+                roleAdmin: 'Admin',
+                roleTeam: 'Team',
+                roleVisitor: 'Visitor',
+                yourName: 'Your Name',
+                password: 'Password',
+                signIn: 'Sign In',
+                subtitle: 'By Zeyad, Zuhair, Baraa | Arduino Science Fair Project',
+                mainComponents: 'Main Components',
+                howItWorks: 'How It Works',
+                keyFeatures: 'Key Features',
+                aboutProject: 'About This Project',
+                teamUpdates: 'Team Updates',
+                adminPanel: 'Admin Panel',
+                pendingSubmissions: 'Pending Submissions',
+                allComments: 'All Comments & Suggestions',
+                shareFeedback: 'Share Your Feedback',
+                arduinoTitle: 'Arduino Uno R3',
+                arduinoDesc: 'The Arduino Uno R3 is the main controller of the entire Tap2Pay system. It manages communication between all hardware components, processes button input, receives data from the NFC reader, updates the OLED screen, and sends control signals to the servo motor. It also supplies power and ensures stable operation of the whole project.',
+                nfcTitle: 'NFC Card Reader',
+                nfcDesc: 'The NFC (Near Field Communication) reader enables contactless card reading. It scans payment cards and mobile wallets at close range, detects card presence, reads secure card data, and sends this information to the Arduino for verification. This is what makes Tap2Pay truly \"tap-and-go.\"',
+                servoTitle: 'Servo Motor',
+                servoDesc: 'The Servo Motor physically opens and closes the payment gate. When a successful payment is detected, the Arduino commands the servo to rotate 90 degrees (opening the gate). After a set delay, the servo returns to its original position, closing the gate until the next payment.',
+                oledTitle: 'OLED Screen',
+                oledDesc: 'The OLED display provides real-time visual feedback to the user. It shows messages like \"Tap Your Card,\" \"Payment Successful,\" and \"Access Granted\" (or denied). The screen helps users understand what the system is doing at every step.',
+                buttonTitle: 'Push Button',
+                buttonDesc: 'The push button gives manual control for testing and override. It can manually trigger the gate, test system responses, and reset the display. Its useful during development, demos, and for admin control.',
+                breadboardTitle: 'Breadboard',
+                breadboardDesc: 'The breadboard is where all components are physically connected. It acts as a central hub linking the Arduino, NFC reader, servo motor, OLED, button, and power rails. It makes prototyping easier without needing to solder components permanently.',
+                step1: 'System Initialization',
+                step1Desc: 'When powered on, the Arduino initializes all connected components (NFC reader, OLED screen, servo motor). The OLED displays a welcome message or \"Ready\" status.',
+                step2: 'Waiting for Card Tap',
+                step2Desc: 'The system enters a standby mode. The NFC reader actively listens for a nearby card or mobile device. The OLED prompts the user to \"Tap Your Card.\"',
+                step3: 'Card Detection & Verification',
+                step3Desc: 'When a card is tapped, the NFC reader reads the unique card ID. The Arduino checks if the card is authorized (pre-registered in code or database). The OLED updates to show \"Processing...\"',
+                step4: 'Gate Opens',
+                step4Desc: 'If the card is authorized, the OLED shows \"Access Granted.\" The Arduino sends a signal to the servo motor, which rotates to open the physical gate (allowing entry).',
+                step5: 'Automatic Gate Close',
+                step5Desc: 'After a few seconds (adjustable delay), the Arduino signals the servo to return to its original position, closing the gate. The system resets and waits for the next tap.',
+                feature1: 'Contactless Payment',
+                feature1Desc: 'Pay instantly by tapping your NFC-enabled card or smartphone—no swiping or inserting required.',
+                feature2: 'Automated Access Control',
+                feature2Desc: 'Servo motor automatically opens the gate when payment is verified, then closes after a set delay.',
+                feature3: 'Real-Time Visual Feedback',
+                feature3Desc: 'The OLED screen shows live status updates like \"Tap Card,\" \"Processing,\" \"Access Granted,\" or \"Denied.\"',
+                feature4: 'Manual Override Button',
+                feature4Desc: 'Push button allows manual testing and control for admins or debugging purposes.',
+                feature5: 'Expandable System',
+                feature5Desc: 'The modular design allows easy addition of Wi-Fi logging, database integration, multiple readers, or app connectivity.',
+                feature6: 'Low-Cost & DIY-Friendly',
+                feature6Desc: 'Built entirely with affordable, beginner-friendly Arduino components—perfect for science fair projects or learning electronics.',
+                aboutText1: 'Tap2Pay is an Arduino-based contactless payment and access control system designed by students for a science fair project. It demonstrates how NFC technology can be used to create real-world applications like automated toll booths, parking gates, or secure entry systems.',
+                aboutText2: 'This project combines hardware (Arduino, NFC reader, servo motor, OLED display) with software logic to create a functional prototype. Its a great example of Internet of Things (IoT) principles, embedded systems programming, and practical engineering.',
+                projectBy: '© 2024 Tap2Pay - Arduino Project by Zeyad, Zuhair, and Baraa',
+                noComments: 'No comments yet. Be the first to share your thoughts!',
+                commentTitle: 'Comment Title',
+                commentText: 'Your comment...',
+                submitComment: 'Submit Comment',
+                reply: 'Reply',
+                postReply: 'Post Reply',
+                deleteBtn: 'Delete',
+                approveBtn: 'Approve',
+                declineBtn: 'Decline',
+                pendingStatus: 'Pending',
+                approvedStatus: 'Approved',
+                rejectedStatus: 'Rejected',
+                noPendingSubmissions: 'No pending submissions',
+                noSubmissions: 'No submissions yet',
+                firebaseNotConfigured: 'Firebase not configured. Comments are disabled.',
+                logout: 'Logout'
+            },
+            ar: {
+                authSubtitle: 'تسجيل الدخول للوصول إلى المشروع',
+                selectRole: 'اختر الدور',
+                roleAdmin: 'مسؤول',
+                roleTeam: 'فريق',
+                roleVisitor: 'زائر',
+                yourName: 'اسمك',
+                password: 'كلمة المرور',
+                signIn: 'تسجيل الدخول',
+                subtitle: 'من قبل زياد، زهير، براء | مشروع معرض العلوم أردوينو',
+                mainComponents: 'المكونات الرئيسية',
+                howItWorks: 'كيف يعمل',
+                keyFeatures: 'الميزات الرئيسية',
+                aboutProject: 'حول هذا المشروع',
+                teamUpdates: 'تحديثات الفريق',
+                adminPanel: 'لوحة الإدارة',
+                pendingSubmissions: 'المقترحات المعلقة',
+                allComments: 'جميع التعليقات والاقتراحات',
+                shareFeedback: 'شارك رأيك',
+                arduinoTitle: 'أردوينو أونو R3',
+                arduinoDesc: 'أردوينو أونو R3 هو المتحكم الرئيسي لنظام Tap2Pay بالكامل. يدير الاتصال بين جميع مكونات الأجهزة، ويعالج إدخال الزر، ويستقبل البيانات من قارئ NFC، ويحدث شاشة OLED، ويرسل إشارات التحكم إلى محرك السيرفو. كما يوفر الطاقة ويضمن الاستقرار التشغيلي للمشروع بأكمله.',
+                nfcTitle: 'قارئ بطاقة NFC',
+                nfcDesc: 'يتيح قارئ NFC (الاتصال قريب المدى) قراءة البطاقات بدون تماس. يقوم بمسح بطاقات الدفع والمحافظ المحمولة عن قرب، ويكتشف وجود البطاقة، ويقرأ بيانات البطاقة الآمنة، ويرسل هذه المعلومات إلى أردوينو للتحقق. هذا ما يجعل Tap2Pay حقاً \"اضغط وانطلق\".',
+                servoTitle: 'محرك سيرفو',
+                servoDesc: 'يقوم محرك السيرفو بفتح وإغلاق بوابة الدفع فعلياً. عند اكتشاف دفعة ناجحة، يأمر أردوينو السيرفو بالدوران 90 درجة (فتح البوابة). بعد تأخير محدد، يعود السيرفو إلى وضعه الأصلي، مغلقاً البوابة حتى الدفعة التالية.',
+                oledTitle: 'شاشة OLED',
+                oledDesc: 'توفر شاشة OLED تعليقات بصرية في الوقت الفعلي للمستخدم. تعرض رسائل مثل \"اضغط بطاقتك\" و\"الدفع ناجح\" و\"تم منح الوصول\" (أو رفضه). تساعد الشاشة المستخدمين على فهم ما يفعله النظام في كل خطوة.',
+                buttonTitle: 'زر ضغط',
+                buttonDesc: 'يوفر زر الضغط تحكماً يدوياً للاختبار والتجاوز. يمكنه تشغيل البوابة يدوياً، واختبار استجابات النظام، وإعادة تعيين الشاشة. إنه مفيد أثناء التطوير والعروض التوضيحية، ولتحكم المسؤول.',
+                breadboardTitle: 'لوحة التوصيل',
+                breadboardDesc: 'لوحة التوصيل هي المكان الذي يتم فيه توصيل جميع المكونات فعلياً. تعمل كمحور مركزي يربط أردوينو وقارئ NFC ومحرك السيرفو وOLED والزر وقضبان الطاقة. تجعل النماذج الأولية أسهل دون الحاجة إلى لحام المكونات بشكل دائم.',
+                step1: 'تهيئة النظام',
+                step1Desc: 'عند التشغيل، يقوم أردوينو بتهيئة جميع المكونات المتصلة (قارئ NFC، شاشة OLED، محرك السيرفو). تعرض OLED رسالة ترحيب أو حالة \"جاهز\".',
+                step2: 'انتظار الضغط على البطاقة',
+                step2Desc: 'يدخل النظام في وضع الاستعداد. يستمع قارئ NFC بنشاط لبطاقة أو جهاز محمول قريب. تطالب OLED المستخدم \"بالضغط على بطاقتك\".',
+                step3: 'اكتشاف البطاقة والتحقق',
+                step3Desc: 'عند الضغط على بطاقة، يقرأ قارئ NFC معرف البطاقة الفريد. يتحقق أردوينو مما إذا كانت البطاقة مصرحة (مسجلة مسبقاً في الكود أو قاعدة البيانات). تحدث OLED لإظهار \"جارٍ المعالجة...\"',
+                step4: 'فتح البوابة',
+                step4Desc: 'إذا كانت البطاقة مصرحة، تظهر OLED \"تم منح الوصول\". يرسل أردوينو إشارة إلى محرك السيرفو، الذي يدور لفتح البوابة الفعلية (للسماح بالدخول).',
+                step5: 'إغلاق البوابة تلقائياً',
+                step5Desc: 'بعد بضع ثوانٍ (تأخير قابل للتعديل)، يشير أردوينو إلى السيرفو للعودة إلى وضعه الأصلي، مغلقاً البوابة. يعيد النظام التعيين وينتظر الضغطة التالية.',
+                feature1: 'الدفع بدون تماس',
+                feature1Desc: 'ادفع على الفور عن طريق الضغط على بطاقتك أو هاتفك الذكي الممكّن لـ NFC - لا حاجة للسحب أو الإدخال.',
+                feature2: 'التحكم الآلي في الوصول',
+                feature2Desc: 'يفتح محرك السيرفو البوابة تلقائياً عند التحقق من الدفع، ثم يغلق بعد تأخير محدد.',
+                feature3: 'تعليقات بصرية في الوقت الفعلي',
+                feature3Desc: 'تعرض شاشة OLED تحديثات الحالة المباشرة مثل \"اضغط البطاقة\" و\"جارٍ المعالجة\" و\"تم منح الوصول\" أو \"مرفوض\".',
+                feature4: 'زر التجاوز اليدوي',
+                feature4Desc: 'يسمح زر الضغط بالاختبار اليدوي والتحكم للمسؤولين أو لأغراض تصحيح الأخطاء.',
+                feature5: 'نظام قابل للتوسع',
+                feature5Desc: 'يسمح التصميم المعياري بإضافة سهلة لتسجيل Wi-Fi، أو تكامل قاعدة البيانات، أو قراء متعددة، أو اتصال التطبيق.',
+                feature6: 'منخفض التكلفة وصديق للهواة',
+                feature6Desc: 'تم بناؤه بالكامل باستخدام مكونات أردوينو ميسورة التكلفة وصديقة للمبتدئين - مثالي لمشاريع معرض العلوم أو تعلم الإلكترونيات.',
+                aboutText1: 'Tap2Pay هو نظام للدفع والتحكم في الوصول بدون تماس يعتمد على أردوينو وصممه الطلاب لمشروع معرض علمي. يوضح كيف يمكن استخدام تقنية NFC لإنشاء تطبيقات واقعية مثل بوابات الرسوم الآلية أو بوابات مواقف السيارات أو أنظمة الدخول الآمنة.',
+                aboutText2: 'يجمع هذا المشروع بين الأجهزة (أردوينو، قارئ NFC، محرك السيرفو، شاشة OLED) ومنطق البرمجيات لإنشاء نموذج أولي وظيفي. إنه مثال رائع على مبادئ إنترنت الأشياء (IoT)، وبرمجة الأنظمة المدمجة، والهندسة العملية.',
+                projectBy: '© 2024 Tap2Pay - مشروع أردوينو من قبل زياد وزهير وبراء',
+                noComments: 'لا توجد تعليقات بعد. كن أول من يشارك أفكاره!',
+                commentTitle: 'عنوان التعليق',
+                commentText: 'تعليقك...',
+                submitComment: 'إرسال التعليق',
+                reply: 'رد',
+                postReply: 'نشر الرد',
+                deleteBtn: 'حذف',
+                approveBtn: 'موافقة',
+                declineBtn: 'رفض',
+                pendingStatus: 'قيد الانتظار',
+                approvedStatus: 'موافق عليه',
+                rejectedStatus: 'مرفوض',
+                noPendingSubmissions: 'لا توجد مقترحات معلقة',
+                noSubmissions: 'لا توجد مقترحات بعد',
+                firebaseNotConfigured: 'لم يتم تكوين Firebase. التعليقات معطلة.',
+                logout: 'تسجيل الخروج'
+            }
+        };
+
+        function t(key) {
+            return translations[currentLang][key] || key;
+        }
+
+        function applyLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            
+            const langToggle = document.getElementById('langToggle');
+            if (langToggle) {
+                langToggle.textContent = lang === 'en' ? 'AR' : 'EN';
+            }
+            
+            updateTranslations();
+        }
+
+        function updateTranslations() {
+            // Generic translator for all elements with data-en and data-ar attributes
+            const allTranslatableElements = document.querySelectorAll('[data-en][data-ar]');
+            allTranslatableElements.forEach(element => {
+                if (currentLang === 'en') {
+                    element.textContent = element.getAttribute('data-en');
+                } else {
+                    element.textContent = element.getAttribute('data-ar');
+                }
+            });
+            
+            // Auth screen
+            const authSubtitle = document.querySelector('.auth-subtitle');
+            if (authSubtitle) authSubtitle.textContent = t('authSubtitle');
+            
+            const selectRole = document.querySelector('#authRole option[value=\"\"]');
+            if (selectRole) selectRole.textContent = t('selectRole');
+            
+            const roleOptions = document.querySelectorAll('#authRole option[value]');
+            if (roleOptions[1]) roleOptions[1].textContent = t('roleAdmin');
+            if (roleOptions[2]) roleOptions[2].textContent = t('roleTeam');
+            if (roleOptions[3]) roleOptions[3].textContent = t('roleVisitor');
+            
+            const authName = document.getElementById('authName');
+            if (authName) authName.placeholder = t('yourName');
+            
+            const authPassword = document.getElementById('authPassword');
+            if (authPassword) authPassword.placeholder = t('password');
+            
+            const authSubmitBtn = document.getElementById('authSubmitBtn');
+            if (authSubmitBtn) authSubmitBtn.textContent = t('signIn');
+            
+            // Main content
+            const subtitle = document.querySelector('.subtitle');
+            if (subtitle) subtitle.textContent = t('subtitle');
+            
+            const sectionTitles = document.querySelectorAll('.section-title');
+            if (sectionTitles[0]) sectionTitles[0].textContent = t('mainComponents');
+            if (sectionTitles[1]) sectionTitles[1].textContent = t('howItWorks');
+            if (sectionTitles[2]) sectionTitles[2].textContent = t('keyFeatures');
+            if (sectionTitles[3]) sectionTitles[3].textContent = t('aboutProject');
+            if (sectionTitles[4]) sectionTitles[4].textContent = t('teamUpdates');
+            if (sectionTitles[5]) sectionTitles[5].textContent = t('adminPanel');
+            
+            const componentTitles = document.querySelectorAll('.component-title');
+            if (componentTitles[0]) componentTitles[0].textContent = t('arduinoTitle');
+            if (componentTitles[1]) componentTitles[1].textContent = t('nfcTitle');
+            if (componentTitles[2]) componentTitles[2].textContent = t('servoTitle');
+            if (componentTitles[3]) componentTitles[3].textContent = t('oledTitle');
+            if (componentTitles[4]) componentTitles[4].textContent = t('buttonTitle');
+            if (componentTitles[5]) componentTitles[5].textContent = t('breadboardTitle');
+            
+            const componentDescs = document.querySelectorAll('.component-description');
+            if (componentDescs[0]) componentDescs[0].textContent = t('arduinoDesc');
+            if (componentDescs[1]) componentDescs[1].textContent = t('nfcDesc');
+            if (componentDescs[2]) componentDescs[2].textContent = t('servoDesc');
+            if (componentDescs[3]) componentDescs[3].textContent = t('oledDesc');
+            if (componentDescs[4]) componentDescs[4].textContent = t('buttonDesc');
+            if (componentDescs[5]) componentDescs[5].textContent = t('breadboardDesc');
+            
+            const stepTitles = document.querySelectorAll('.step-title');
+            if (stepTitles[0]) stepTitles[0].textContent = t('step1');
+            if (stepTitles[1]) stepTitles[1].textContent = t('step2');
+            if (stepTitles[2]) stepTitles[2].textContent = t('step3');
+            if (stepTitles[3]) stepTitles[3].textContent = t('step4');
+            if (stepTitles[4]) stepTitles[4].textContent = t('step5');
+            
+            const aboutParas = document.querySelectorAll('.about-section p');
+            if (aboutParas[0]) aboutParas[0].textContent = t('aboutText1');
+            if (aboutParas[1]) aboutParas[1].textContent = t('aboutText2');
+            
+            const footer = document.querySelector('.footer');
+            if (footer) footer.textContent = t('projectBy');
+            
+            const titleInput = document.getElementById('feedbackTitle');
+            if (titleInput) titleInput.placeholder = t('commentTitle');
+            
+            const textArea = document.getElementById('feedbackText');
+            if (textArea) textArea.placeholder = t('commentText');
+            
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) logoutBtn.textContent = t('logout');
+            
+            if (typeof loadComments === 'function') {
+                loadComments();
+            }
+            if (typeof loadPendingSubmissions === 'function') {
+                loadPendingSubmissions();
+            }
+        }
+
         // ==================== SMOOTH SCROLL & PAGE LOAD EFFECTS ==================== //
         // Ensure smooth animations on page load
         window.addEventListener('load', function() {
@@ -1612,6 +1900,18 @@
             console.log('Tap2Pay website loaded successfully!');
             checkStoredLogin();
             initFeedbackSystem();
+            
+            // Apply saved language or default to English
+            applyLanguage(currentLang);
+            
+            // Language toggle button
+            const langToggle = document.getElementById('langToggle');
+            if (langToggle) {
+                langToggle.addEventListener('click', function() {
+                    const newLang = currentLang === 'en' ? 'ar' : 'en';
+                    applyLanguage(newLang);
+                });
+            }
         });
 
         // ==================== PREVENT SCROLLING INTERFERENCE ==================== //
@@ -1950,8 +2250,8 @@
             successMsg.classList.remove('show');
 
             try {
-                if (database) {
-                    // Add to Realtime Database
+                if (!database) {
+                    commentsList.innerHTML = '<div class="no-comments">Firebase not configured</div>';
                     const newRef = firebase.database().ref('suggestions').push();
                     await newRef.set({
                         title: title,
@@ -2274,6 +2574,9 @@
             return div.innerHTML;
         }
     </script>
+
+    <!-- Language Toggle Button -->
+    <button class="lang-toggle" id="langToggle">AR</button>
 
 </body>
 </html>
