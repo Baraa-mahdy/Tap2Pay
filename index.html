@@ -2454,6 +2454,11 @@
             if (typeof loadPendingSubmissions === 'function') {
                 loadPendingSubmissions();
             }
+            
+            // IMPORTANT: Reapply visitor restrictions after language change
+            if (typeof updateContentVisibility === 'function') {
+                updateContentVisibility();
+            }
         }
 
         // ==================== SMOOTH SCROLL & PAGE LOAD EFFECTS ==================== //
@@ -3304,7 +3309,7 @@
                 left: 0;
                 right: 0;
                 bottom: 0;
-                background: rgba(0, 0, 0, 0.5);
+                background: rgba(0, 0, 0, 0.8);
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -3314,14 +3319,15 @@
             
             const dialogContent = document.createElement('div');
             dialogContent.style.cssText = `
-                background: var(--bg-secondary);
+                background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
                 color: var(--text-primary);
                 padding: 30px;
                 border-radius: 12px;
                 text-align: center;
-                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
                 max-width: 300px;
                 animation: slideUp 0.3s ease;
+                border: 1px solid var(--primary-color);
             `;
             
             dialogContent.innerHTML = `
