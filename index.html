@@ -6,6 +6,10 @@
     <title>Tap2Pay - Arduino Science Fair Project</title>
     <link rel="icon" href="Create a futuristic .png" type="image/x-icon">
     
+    <!-- Firebase SDK v8 (simpler for HTML files) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     
     <style>
         /* ==================== RESET & VARIABLES ==================== */
@@ -34,6 +38,40 @@
             color: var(--white);
             min-height: 100vh;
             overflow-x: hidden;
+        }
+
+        /* ==================== CUSTOM SCROLLBAR ==================== */
+        /* Webkit browsers (Chrome, Safari, Edge) */
+        ::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #FF3B3B 0%, #ff6b6b 100%);
+            border-radius: 10px;
+            border: 2px solid #0a0a0a;
+            transition: all 0.3s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #ff6b6b 0%, #FF3B3B 100%);
+            box-shadow: 0 0 15px rgba(255, 59, 59, 0.5);
+        }
+
+        ::-webkit-scrollbar-thumb:active {
+            background: #FF3B3B;
+        }
+
+        /* Firefox */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #FF3B3B #0a0a0a;
         }
 
         /* ==================== CONTAINER & LAYOUT ==================== */
@@ -414,6 +452,516 @@
             }
         }
 
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(255, 59, 59, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 59, 59, 0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ==================== FEEDBACK BUTTON ==================== */
+        .feedback-btn {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            background: linear-gradient(135deg, var(--primary-red) 0%, #cc2f2f 100%);
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            padding: 16px 28px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            animation: pulse 2s infinite, float 3s ease-in-out infinite;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .feedback-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--glow), var(--shadow);
+        }
+
+        .feedback-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffd700;
+            color: var(--dark-gray);
+            border-radius: 50%;
+            min-width: 24px;
+            height: 24px;
+            font-size: 0.75rem;
+            font-weight: 900;
+            margin-left: 5px;
+        }
+
+        /* ==================== MODAL OVERLAY ==================== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ==================== MODAL CONTENT ==================== */
+        .modal-content {
+            background: linear-gradient(135deg, var(--card-bg) 0%, #1f1f1f 100%);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow);
+            animation: scaleIn 0.4s ease-out;
+            border: 1px solid rgba(255, 59, 59, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid rgba(255, 59, 59, 0.3);
+            padding-bottom: 15px;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--primary-red);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--primary-red);
+            font-size: 2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            transform: rotate(90deg);
+            color: var(--white);
+        }
+
+        /* ==================== FORM ELEMENTS ==================== */
+        .feedback-form {
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-red);
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid rgba(255, 59, 59, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 59, 59, 0.05);
+            color: var(--white);
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-red);
+            box-shadow: 0 0 15px rgba(255, 59, 59, 0.3);
+            background: rgba(255, 59, 59, 0.08);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary-red) 0%, #cc2f2f 100%);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            padding: 14px 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glow), var(--shadow-light);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--white);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ==================== SUCCESS MESSAGE ==================== */
+        .success-message {
+            display: none;
+            background: rgba(76, 175, 80, 0.2);
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #4caf50;
+            font-weight: 600;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        /* ==================== ERROR MESSAGE ==================== */
+        .error-message {
+            display: none;
+            background: rgba(244, 67, 54, 0.2);
+            border: 2px solid #f44336;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #f44336;
+            font-weight: 600;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* ==================== COMMENTS SECTION ==================== */
+        .comments-section {
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 2px solid rgba(255, 59, 59, 0.3);
+        }
+
+        .comments-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .comment-card {
+            background: linear-gradient(135deg, rgba(255, 59, 59, 0.08) 0%, rgba(255, 59, 59, 0.02) 100%);
+            border: 1px solid rgba(255, 59, 59, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            animation: slideUp 0.5s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .comment-card:nth-child(1) { animation-delay: 0.1s; }
+        .comment-card:nth-child(2) { animation-delay: 0.2s; }
+        .comment-card:nth-child(3) { animation-delay: 0.3s; }
+
+        .comment-text {
+            color: #ddd;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .comment-date {
+            font-size: 0.75rem;
+            color: #888;
+            font-style: italic;
+        }
+
+        .no-comments {
+            text-align: center;
+            color: #888;
+            padding: 20px;
+            font-style: italic;
+        }
+
+        /* ==================== ADMIN PANEL ==================== */
+        .admin-panel {
+            display: none;
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 2px solid rgba(255, 59, 59, 0.3);
+        }
+
+        .admin-panel.active {
+            display: block;
+        }
+
+        .admin-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffd700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .pending-item {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .pending-text {
+            color: #ddd;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .pending-meta {
+            font-size: 0.75rem;
+            color: #888;
+            margin-bottom: 12px;
+        }
+
+        .admin-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .approve-btn,
+        .decline-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .approve-btn {
+            background: #4caf50;
+            color: white;
+        }
+
+        .approve-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .decline-btn {
+            background: #f44336;
+            color: white;
+        }
+
+        .decline-btn:hover {
+            background: #da190b;
+            transform: translateY(-2px);
+        }
+
+        /* ==================== ADMIN LOGIN MODAL ==================== */
+        .admin-login-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .admin-login-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .admin-login-box {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            max-width: 450px;
+            width: 90%;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .admin-login-modal.active .admin-login-box {
+            transform: scale(1);
+        }
+
+        .admin-login-title {
+            font-size: 1.8rem;
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .admin-login-input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #444;
+            border-radius: 10px;
+            background: #1a1a1a;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .admin-login-input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .admin-login-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .admin-login-submit {
+            flex: 1;
+            padding: 15px;
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .admin-login-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .admin-login-cancel {
+            flex: 1;
+            padding: 15px;
+            background: #444;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .admin-login-cancel:hover {
+            background: #555;
+            transform: translateY(-2px);
+        }
+
         /* ==================== RESPONSIVE DESIGN ==================== */
         @media (max-width: 1366px) and (min-width: 1024px) {
             .container {
@@ -459,6 +1007,26 @@
         }
 
         @media (max-width: 768px) {
+            .feedback-btn {
+                bottom: 30px;
+                right: 30px;
+                padding: 14px 20px;
+                font-size: 0.85rem;
+            }
+
+            .modal-content {
+                padding: 30px 20px;
+                max-width: 95%;
+            }
+
+            .modal-title {
+                font-size: 1.5rem;
+            }
+
+            .comments-list {
+                max-height: 250px;
+            }
+
             .main-content {
                 grid-template-columns: 1fr;
                 gap: 30px;
@@ -489,6 +1057,26 @@
         }
 
         @media (max-width: 480px) {
+            .feedback-btn {
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 16px;
+                font-size: 0.75rem;
+            }
+
+            .modal-content {
+                padding: 20px 15px;
+                max-width: 100%;
+            }
+
+            .modal-title {
+                font-size: 1.2rem;
+            }
+
+            .comments-list {
+                max-height: 200px;
+            }
+
             .title {
                 font-size: 2rem;
                 letter-spacing: 1px;
@@ -698,6 +1286,76 @@
         </div>
     </div>
 
+    <!-- Feedback Button -->
+    <button class="feedback-btn" id="feedbackBtn">
+        💬 Updates
+        <span class="feedback-badge" id="badgeCount" style="display: none;">0</span>
+    </button>
+
+    <!-- Feedback Modal -->
+    <div class="modal-overlay" id="feedbackModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Project Updates</h2>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage">✓ Your suggestion has been submitted for review!</div>
+
+            <!-- Feedback Form -->
+            <form class="feedback-form" id="feedbackForm">
+                <div class="form-group">
+                    <label class="form-label" for="suggestionTitle">Your Name or Title</label>
+                    <input type="text" id="suggestionTitle" class="form-input" placeholder="e.g., Feature Idea, Bug Report" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="suggestionText">Your Suggestion or Update</label>
+                    <textarea id="suggestionText" class="form-textarea" placeholder="Share your ideas, suggestions, or updates..." required></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span class="loading-spinner" id="spinner" style="display: none;"></span>
+                    Submit Suggestion
+                </button>
+            </form>
+
+            <!-- Comments Section -->
+            <div class="comments-section">
+                <h3 class="comments-title">All Submissions</h3>
+                <div class="comments-list" id="commentsList">
+                    <div class="no-comments">No updates yet. Be the first to suggest!</div>
+                </div>
+            </div>
+
+            <!-- Admin Login Button -->
+            <div style="text-align: center; margin: 20px 0;">
+                <button class="submit-btn" id="adminLoginBtn" style="background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%); width: auto; padding: 12px 30px;">🔐 Admin Login</button>
+            </div>
+
+            <!-- Admin Panel -->
+            <div class="admin-panel" id="adminPanel">
+                <h3 class="admin-title">🔐 Admin Panel</h3>
+                <div id="pendingSubmissions"></div>
+                <button class="decline-btn" id="logoutAdmin" style="width: auto; margin-top: 15px;">Logout Admin</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div class="admin-login-modal" id="adminLoginModal">
+        <div class="admin-login-box">
+            <h2 class="admin-login-title">🔐 Admin Login</h2>
+            <input type="email" id="adminEmail" class="admin-login-input" placeholder="Email Address" required>
+            <input type="password" id="adminPassword" class="admin-login-input" placeholder="Password" required>
+            <div class="admin-login-buttons">
+                <button class="admin-login-submit" id="adminLoginSubmit">Login</button>
+                <button class="admin-login-cancel" id="adminLoginCancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript for Interactivity -->
     <script>
         // ==================== COMPONENT CARD ACCORDION ==================== //
@@ -725,11 +1383,422 @@
         window.addEventListener('load', function() {
             // Animation triggers are handled by CSS
             console.log('Tap2Pay website loaded successfully!');
+            initFeedbackSystem();
         });
 
         // ==================== PREVENT SCROLLING INTERFERENCE ==================== //
         // Smooth scroll behavior for better UX
         document.documentElement.style.scrollBehavior = 'smooth';
+
+        // ==================== FIREBASE CONFIGURATION ==================== //
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6yVkSQT4gn47YIo5UAJzgVEGlfHaFsTE",
+            authDomain: "tap2pay-c4bae.firebaseapp.com",
+            projectId: "tap2pay-c4bae",
+            storageBucket: "tap2pay-c4bae.firebasestorage.app",
+            messagingSenderId: "843180266943",
+            appId: "1:843180266943:web:03d4fec1918a3180247d0a",
+            measurementId: "G-5CZ7BPWXN5",
+            databaseURL: "https://tap2pay-c4bae-default-rtdb.firebaseio.com"
+        };
+
+        // Initialize Firebase (if available)
+        let database = null;
+        let auth = null;
+        let currentAdminUser = null;
+
+        // Initialize Firebase if script is loaded
+        if (typeof firebase !== 'undefined') {
+            firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            auth = firebase.auth();
+        }
+
+        // ==================== FEEDBACK SYSTEM ==================== //
+        function initFeedbackSystem() {
+            const feedbackBtn = document.getElementById('feedbackBtn');
+            const feedbackModal = document.getElementById('feedbackModal');
+            const closeModal = document.getElementById('closeModal');
+            const feedbackForm = document.getElementById('feedbackForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const errorMsg = document.getElementById('errorMessage');
+            const successMsg = document.getElementById('successMessage');
+
+            // Open modal
+            feedbackBtn.addEventListener('click', () => {
+                feedbackModal.classList.add('active');
+                loadComments();
+                checkAdminStatus();
+            });
+
+            // Close modal
+            closeModal.addEventListener('click', () => {
+                feedbackModal.classList.remove('active');
+            });
+
+            // Close on overlay click
+            feedbackModal.addEventListener('click', (e) => {
+                if (e.target === feedbackModal) {
+                    feedbackModal.classList.remove('active');
+                }
+            });
+
+            // Submit form
+            feedbackForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await submitFeedback();
+            });
+
+            // Admin login button - Open modal
+            const adminLoginBtn = document.getElementById('adminLoginBtn');
+            const adminLoginModal = document.getElementById('adminLoginModal');
+            const adminLoginSubmit = document.getElementById('adminLoginSubmit');
+            const adminLoginCancel = document.getElementById('adminLoginCancel');
+            const adminEmail = document.getElementById('adminEmail');
+            const adminPassword = document.getElementById('adminPassword');
+
+            adminLoginBtn.addEventListener('click', () => {
+                adminLoginModal.classList.add('active');
+                adminEmail.value = '';
+                adminPassword.value = '';
+                adminEmail.focus();
+            });
+
+            // Cancel login
+            adminLoginCancel.addEventListener('click', () => {
+                adminLoginModal.classList.remove('active');
+            });
+
+            // Close modal on overlay click
+            adminLoginModal.addEventListener('click', (e) => {
+                if (e.target === adminLoginModal) {
+                    adminLoginModal.classList.remove('active');
+                }
+            });
+
+            // Submit login
+            adminLoginSubmit.addEventListener('click', async () => {
+                const email = adminEmail.value.trim();
+                const password = adminPassword.value.trim();
+                
+                if (!email || !password) {
+                    alert('Please enter both email and password');
+                    return;
+                }
+
+                if (auth) {
+                    adminLoginSubmit.disabled = true;
+                    adminLoginSubmit.textContent = 'Logging in...';
+                    
+                    try {
+                        await auth.signInWithEmailAndPassword(email, password);
+                        alert('✓ Admin login successful!');
+                        adminLoginModal.classList.remove('active');
+                        checkAdminStatus();
+                    } catch (error) {
+                        alert('✕ Login failed: ' + error.message);
+                    } finally {
+                        adminLoginSubmit.disabled = false;
+                        adminLoginSubmit.textContent = 'Login';
+                    }
+                }
+            });
+
+            // Enter key to submit login
+            adminPassword.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    adminLoginSubmit.click();
+                }
+            });
+
+            // Load initial comments and pending count
+            loadPendingCount();
+        }
+
+        // Submit feedback to Realtime Database
+        async function submitFeedback() {
+            const submitBtn = document.getElementById('submitBtn');
+            const spinner = document.getElementById('spinner');
+            const errorMsg = document.getElementById('errorMessage');
+            const successMsg = document.getElementById('successMessage');
+            const form = document.getElementById('feedbackForm');
+
+            const title = document.getElementById('suggestionTitle').value.trim();
+            const text = document.getElementById('suggestionText').value.trim();
+
+            if (!title || !text) {
+                showError('Please fill in all fields');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            spinner.style.display = 'inline-block';
+            errorMsg.classList.remove('show');
+            successMsg.classList.remove('show');
+
+            try {
+                if (database) {
+                    // Add to Realtime Database
+                    const newRef = firebase.database().ref('suggestions').push();
+                    await newRef.set({
+                        title: title,
+                        text: text,
+                        status: 'pending',
+                        timestamp: firebase.database.ServerValue.TIMESTAMP,
+                        ip: 'anonymous'
+                    });
+
+                    // Show success
+                    successMsg.classList.add('show');
+                    form.reset();
+
+                    // Reload comments and pending count
+                    setTimeout(() => {
+                        loadComments();
+                        loadPendingCount();
+                        successMsg.classList.remove('show');
+                    }, 2000);
+                } else {
+                    // Demo mode - no Firebase
+                    showError('Firebase not configured. Setup required.');
+                }
+            } catch (error) {
+                console.error('Error submitting feedback:', error);
+                showError('Failed to submit. Please try again.');
+            } finally {
+                submitBtn.disabled = false;
+                spinner.style.display = 'none';
+            }
+        }
+
+        // Load all comments from Realtime Database (with status badges)
+        function loadComments() {
+            const commentsList = document.getElementById('commentsList');
+
+            if (!database) {
+                commentsList.innerHTML = '<div class="no-comments">Firebase not configured</div>';
+                return;
+            }
+
+            firebase.database().ref('suggestions').orderByChild('timestamp').on('value', (snapshot) => {
+                if (!snapshot.exists()) {
+                    commentsList.innerHTML = '<div class="no-comments">No submissions yet.</div>';
+                    return;
+                }
+
+                const comments = [];
+                snapshot.forEach((childSnapshot) => {
+                    const data = childSnapshot.val();
+                    comments.push({
+                        id: childSnapshot.key,
+                        ...data
+                    });
+                });
+
+                if (comments.length === 0) {
+                    commentsList.innerHTML = '<div class="no-comments">No submissions yet.</div>';
+                    return;
+                }
+
+                // Sort by timestamp descending
+                comments.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+                commentsList.innerHTML = '';
+                comments.forEach((comment, index) => {
+                    const date = comment.timestamp 
+                        ? new Date(comment.timestamp).toLocaleDateString() 
+                        : 'Unknown';
+                    
+                    // Status badge
+                    let statusBadge = '';
+                    let cardStyle = '';
+                    if (comment.status === 'approved') {
+                        statusBadge = '<span style="background: #28a745; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">✓ APPROVED</span>';
+                    } else if (comment.status === 'rejected') {
+                        statusBadge = '<span style="background: #dc3545; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">✕ DECLINED</span>';
+                        cardStyle = 'opacity: 0.6; border-left: 3px solid #dc3545;';
+                    } else if (comment.status === 'pending') {
+                        statusBadge = '<span style="background: #ffc107; color: #000; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">⏳ PENDING</span>';
+                        cardStyle = 'border-left: 3px solid #ffc107;';
+                    }
+
+                    const html = `
+                        <div class="comment-card" style="animation-delay: ${index * 0.1}s; ${cardStyle}">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <strong style="color: var(--primary-red);">${escapeHtml(comment.title)}</strong>
+                                ${statusBadge}
+                            </div>
+                            <div class="comment-text">${escapeHtml(comment.text)}</div>
+                            <div class="comment-date">📅 ${date}</div>
+                        </div>
+                    `;
+                    commentsList.innerHTML += html;
+                });
+            });
+        }
+
+        // Load pending count from Realtime Database
+        function loadPendingCount() {
+            const badgeCount = document.getElementById('badgeCount');
+
+            if (!database) {
+                badgeCount.style.display = 'none';
+                return;
+            }
+
+            firebase.database().ref('suggestions').on('value', (snapshot) => {
+                if (!snapshot.exists()) {
+                    badgeCount.style.display = 'none';
+                    return;
+                }
+
+                let count = 0;
+                snapshot.forEach((childSnapshot) => {
+                    const data = childSnapshot.val();
+                    if (data.status === 'pending') {
+                        count++;
+                    }
+                });
+
+                if (count > 0) {
+                    badgeCount.textContent = count;
+                    badgeCount.style.display = 'flex';
+                } else {
+                    badgeCount.style.display = 'none';
+                }
+            });
+        }
+
+        // Check admin status
+        function checkAdminStatus() {
+            const adminPanel = document.getElementById('adminPanel');
+
+            if (!auth) {
+                adminPanel.style.display = 'none';
+                return;
+            }
+
+            auth.onAuthStateChanged((user) => {
+                if (user && user.email === 'admin@tap2pay.com') {
+                    currentAdminUser = user;
+                    adminPanel.classList.add('active');
+                    loadPendingSubmissions();
+
+                    document.getElementById('logoutAdmin').addEventListener('click', () => {
+                        auth.signOut();
+                        currentAdminUser = null;
+                        adminPanel.classList.remove('active');
+                        location.reload();
+                    });
+                } else {
+                    adminPanel.classList.remove('active');
+                    currentAdminUser = null;
+                }
+            });
+        }
+
+        // Load pending submissions for admin from Realtime Database
+        function loadPendingSubmissions() {
+            const pendingContainer = document.getElementById('pendingSubmissions');
+
+            if (!database || !currentAdminUser) {
+                return;
+            }
+
+            firebase.database().ref('suggestions').orderByChild('timestamp').on('value', (snapshot) => {
+                if (!snapshot.exists()) {
+                    pendingContainer.innerHTML = '<div class="no-comments">No pending submissions</div>';
+                    return;
+                }
+
+                const pending = [];
+                snapshot.forEach((childSnapshot) => {
+                    const data = childSnapshot.val();
+                    if (data.status === 'pending') {
+                        pending.push({
+                            id: childSnapshot.key,
+                            ...data
+                        });
+                    }
+                });
+
+                pendingContainer.innerHTML = '';
+
+                if (pending.length === 0) {
+                    pendingContainer.innerHTML = '<div class="no-comments">No pending submissions</div>';
+                    return;
+                }
+
+                // Sort by timestamp ascending (oldest first)
+                pending.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+
+                pending.forEach((item) => {
+                    const date = item.timestamp 
+                        ? new Date(item.timestamp).toLocaleDateString() 
+                        : 'Unknown';
+                    const html = `
+                        <div class="pending-item">
+                            <strong style="color: var(--primary-red);">${escapeHtml(item.title)}</strong>
+                            <div class="pending-text">${escapeHtml(item.text)}</div>
+                            <div class="pending-meta">📅 ${date}</div>
+                            <div class="admin-buttons">
+                                <button class="approve-btn" onclick="approveSubmission('${item.id}')">✓ Approve</button>
+                                <button class="decline-btn" onclick="declineSubmission('${item.id}')">✕ Decline</button>
+                            </div>
+                        </div>
+                    `;
+                    pendingContainer.innerHTML += html;
+                });
+            });
+        }
+
+        // Approve submission in Realtime Database
+        async function approveSubmission(docId) {
+            if (!database || !currentAdminUser) return;
+
+            try {
+                await firebase.database().ref(`suggestions/${docId}`).update({
+                    status: 'approved'
+                });
+                loadComments();
+                loadPendingCount();
+            } catch (error) {
+                console.error('Error approving submission:', error);
+            }
+        }
+
+        // Decline submission in Realtime Database
+        async function declineSubmission(docId) {
+            if (!database || !currentAdminUser) return;
+
+            try {
+                await firebase.database().ref(`suggestions/${docId}`).update({
+                    status: 'rejected'
+                });
+                loadComments();
+                loadPendingCount();
+            } catch (error) {
+                console.error('Error declining submission:', error);
+            }
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorMsg = document.getElementById('errorMessage');
+            errorMsg.textContent = '✕ ' + message;
+            errorMsg.classList.add('show');
+            setTimeout(() => {
+                errorMsg.classList.remove('show');
+            }, 4000);
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
     </script>
+
 </body>
 </html>
