@@ -2188,16 +2188,22 @@
                 const text = e.target.value.trim().toLowerCase();
                 
                 // Check if the text matches any greeting pattern
-                const isGreeting = GREETING_PATTERNS.some(pattern => 
-                    text === pattern || text.startsWith(pattern + ' ') || text.startsWith(pattern + ',')
-                );
-
-                // Clear previous timeout
-                if (greetingTimeout) {
-                    clearTimeout(greetingTimeout);
-                }
+                // Supports greetings with common punctuation (space, comma, exclamation, question, period)
+                const isGreeting = GREETING_PATTERNS.some(pattern => {
+                    return text === pattern || 
+                           text.startsWith(pattern + ' ') || 
+                           text.startsWith(pattern + ',') ||
+                           text.startsWith(pattern + '!') ||
+                           text.startsWith(pattern + '?') ||
+                           text.startsWith(pattern + '.');
+                });
 
                 if (isGreeting && text.length < MAX_GREETING_LENGTH) {
+                    // Clear previous timeout if exists
+                    if (greetingTimeout) {
+                        clearTimeout(greetingTimeout);
+                    }
+                    
                     // Show greeting message
                     greetingMessage.classList.add('show');
                     
@@ -2206,8 +2212,14 @@
                         greetingMessage.classList.remove('show');
                     }, GREETING_AUTO_HIDE_MS);
                 } else {
-                    // Hide greeting message
+                    // Hide greeting message immediately
                     greetingMessage.classList.remove('show');
+                    
+                    // Clear any pending timeout
+                    if (greetingTimeout) {
+                        clearTimeout(greetingTimeout);
+                        greetingTimeout = null;
+                    }
                 }
             });
 
