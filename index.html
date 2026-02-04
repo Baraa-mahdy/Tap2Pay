@@ -2042,6 +2042,19 @@
                         ? `<button class="decline-btn" style="padding: 4px 8px; font-size: 0.75rem; margin-left: auto;" onclick="deleteComment('${comment.id}')">🗑️ Delete</button>` 
                         : '';
 
+                    const repliesArray = comment.replies
+                        ? Object.values(comment.replies).sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0))
+                        : [];
+
+                    const repliesHtml = repliesArray.length
+                        ? repliesArray.map(reply => `
+                            <div style="margin-top: 6px; padding-left: 10px; border-left: 2px solid rgba(255, 59, 59, 0.3);">
+                                <div style="font-size: 0.85rem; color: #ddd;">${escapeHtml(reply.text)}</div>
+                                <div style="font-size: 0.75rem; color: #999; margin-top: 2px;">👤 <strong>${escapeHtml(reply.userName || 'Anonymous')}</strong> • ${reply.timestamp ? new Date(reply.timestamp).toLocaleDateString() : 'Unknown'}</div>
+                            </div>
+                        `).join('')
+                        : '<div style="font-size: 0.8rem; color: #777; margin-top: 6px;">No replies yet.</div>';
+
                     const html = `
                         <div class="comment-card" style="animation-delay: ${index * 0.1}s; ${cardStyle}">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
@@ -2054,6 +2067,14 @@
                             <div class="comment-text">${escapeHtml(comment.text)}</div>
                             <div style="font-size: 0.85rem; color: #999; margin-top: 6px;">👤 <strong>${escapeHtml(comment.userName || 'Anonymous')}</strong></div>
                             <div class="comment-date">📅 ${date}</div>
+                            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                                <div style="font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: #ccc;">Replies</div>
+                                <div>${repliesHtml}</div>
+                                <div style="display: flex; gap: 8px; margin-top: 10px;">
+                                    <input type="text" id="reply-${comment.id}" class="auth-input" placeholder="Write a reply..." style="flex: 1; padding: 8px 10px; font-size: 0.85rem;" />
+                                    <button class="submit-btn" style="padding: 8px 12px; font-size: 0.75rem;" onclick="submitReply('${comment.id}')">Reply</button>
+                                </div>
+                            </div>
                         </div>
                     `;
                     commentsList.innerHTML += html;
@@ -2209,6 +2230,30 @@
                 } catch (error) {
                     console.error('Error deleting comment:', error);
                 }
+            }
+        }
+
+        // Submit reply
+        async function submitReply(commentId) {
+            if (!database) return;
+
+            const input = document.getElementById(`reply-${commentId}`);
+            if (!input) return;
+
+            const text = input.value.trim();
+            if (!text) return;
+
+            const replyRef = firebase.database().ref(`suggestions/${commentId}/replies`).push();
+            try {
+                await replyRef.set({
+                    text: text,
+                    userName: currentUserName || 'Anonymous',
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                });
+                input.value = '';
+                loadComments();
+            } catch (error) {
+                console.error('Error submitting reply:', error);
             }
         }
 
