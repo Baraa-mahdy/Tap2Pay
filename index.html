@@ -20,22 +20,69 @@
         }
 
         :root {
-            --primary-red: #FF3B3B;
-            --dark-gray: #1a1a1a;
-            --light-gray: #f5f5f5;
-            --white: #ffffff;
-            --card-bg: #2a2a2a;
+            /* ===== PRIMARY COLOR (SINGLE SOURCE OF TRUTH) ===== */
+            --primary-color: #FF3B3B;
+            --primary-rgb: 255, 59, 59;
+            
+            /* ===== STATUS COLORS ===== */
+            --color-success: #28a745;
+            --color-warning: #ffc107;
+            --color-error: #dc3545;
+            
+            /* ===== BACKGROUND COLORS ===== */
+            --bg-main: #0f0f0f;
+            --bg-main-alt: #1a1a1a;
+            --bg-card: #2a2a2a;
+            --bg-card-hover: #333333;
+            --bg-input: #1a1a1a;
+            --bg-sidebar: rgba(26, 26, 26, 0.95);
+            
+            /* ===== TEXT COLORS (UNIFIED) ===== */
+            --text-color: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --text-light: rgba(255, 255, 255, 0.4);
+            
+            /* ===== LEGACY ALIASES (for compatibility) ===== */
+            --text-primary: #ffffff;
+            --section-text-color: #ffffff;
+            
+            /* ===== BORDER COLORS (derived from primary) ===== */
+            --border-color: rgba(var(--primary-rgb), 0.2);
+            --border-color-light: rgba(var(--primary-rgb), 0.1);
+            --border-color-dark: rgba(var(--primary-rgb), 0.3);
+            
+            /* ===== SHADOWS ===== */
             --shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
             --shadow-light: 0 5px 20px rgba(0, 0, 0, 0.1);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+            
+            /* ===== PRIMARY COLOR SHADOWS (for hover effects) ===== */
+            --shadow-sm: 0 0 10px rgba(var(--primary-rgb), 0.3);
+            --shadow-md: 0 0 15px rgba(var(--primary-rgb), 0.3);
+            --shadow-lg: 0 0 20px rgba(var(--primary-rgb), 0.4);
+            --shadow-xl: 0 10px 30px rgba(var(--primary-rgb), 0.2);
+            --shadow-pulse: 0 0 0 0 rgba(var(--primary-rgb), 0.7);
+            
+            /* ===== GLOW EFFECTS (all from primary) ===== */
+            --glow: 0 0 20px rgba(var(--primary-rgb), 0.5);
+            --glow-sm: 0 0 10px rgba(var(--primary-rgb), 0.4);
+            --glow-lg: 0 0 30px rgba(var(--primary-rgb), 0.6);
+            
+            /* ===== TRANSITIONS ===== */
             --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            --glow: 0 0 20px rgba(255, 59, 59, 0.5);
+            --transition-fast: all 0.2s ease;
+            
+            /* ===== OPACITY ===== */
+            --opacity-hover: 0.8;
+            --opacity-disabled: 0.5;
         }
 
         /* ==================== BODY & GLOBALS ==================== */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #0a0a0a 100%);
-            color: var(--white);
+            background: linear-gradient(135deg, var(--bg-main) 0%, var(--bg-main-alt) 50%, #0a0a0a 100%);
+            color: var(--text-primary);
             min-height: 100vh;
             overflow-x: hidden;
         }
@@ -45,9 +92,10 @@
             position: fixed;
             bottom: 20px;
             left: 20px;
-            background: linear-gradient(135deg, var(--primary-red), #ff6b6b);
-            color: white;
-            border: none;
+            background: var(--primary-color);
+            opacity: 0.9;
+            color: var(--text-primary);
+            border: 2px solid var(--bg-main);
             padding: 10px 20px;
             border-radius: 25px;
             cursor: pointer;
@@ -71,30 +119,30 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: #0a0a0a;
+            background: var(--bg-main);
             border-radius: 10px;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #FF3B3B 0%, #ff6b6b 100%);
+            background: var(--primary-color);
             border-radius: 10px;
-            border: 2px solid #0a0a0a;
+            border: 2px solid var(--bg-main);
             transition: all 0.3s ease;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #ff6b6b 0%, #FF3B3B 100%);
-            box-shadow: 0 0 15px rgba(255, 59, 59, 0.5);
+            background: var(--primary-color);
+            box-shadow: var(--glow);
         }
 
         ::-webkit-scrollbar-thumb:active {
-            background: #FF3B3B;
+            background: var(--primary-color);
         }
 
         /* Firefox */
         * {
             scrollbar-width: thin;
-            scrollbar-color: #FF3B3B #0a0a0a;
+            scrollbar-color: var(--primary-color) var(--bg-main);
         }
 
         /* ==================== CONTAINER & LAYOUT ==================== */
@@ -114,7 +162,7 @@
         .title {
             font-size: 4rem;
             font-weight: 900;
-            color: var(--primary-red);
+            color: var(--primary-color);
             letter-spacing: 3px;
             margin-bottom: 10px;
             text-transform: uppercase;
@@ -124,7 +172,7 @@
         .subtitle {
             font-size: 1rem;
             font-style: italic;
-            color: #aaa;
+            color: var(--text-muted);
             letter-spacing: 1px;
             animation: fadeIn 1.2s ease-out 0.3s both;
         }
@@ -147,7 +195,7 @@
         .section-title {
             font-size: 1.8rem;
             font-weight: 700;
-            color: var(--primary-red);
+            color: var(--primary-color);
             margin-bottom: 20px;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -155,7 +203,7 @@
         }
 
         .component-card {
-            background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
+            background: linear-gradient(135deg, var(--bg-card) 0%, #1f1f1f 100%);
             border-radius: 12px;
             padding: 20px;
             cursor: pointer;
@@ -175,13 +223,13 @@
         .component-card:nth-child(5) { animation-delay: 0.5s; }
 
         .component-card:hover {
-            border-color: var(--primary-red);
+            border-color: var(--primary-color);
             box-shadow: var(--glow), var(--shadow);
             transform: translateY(-3px);
         }
 
         .component-card.expanded {
-            background: linear-gradient(135deg, var(--primary-red) 0%, #cc2f2f 100%);
+            background: var(--primary-color);
             box-shadow: var(--glow), var(--shadow);
         }
 
@@ -196,28 +244,28 @@
         .component-title {
             font-size: 1.3rem;
             font-weight: 700;
-            color: var(--white);
+            color: var(--section-text-color);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
         .component-card.expanded .component-title {
-            color: var(--white);
+            color: var(--section-text-color);
         }
 
         .arrow-icon {
             font-size: 1.5rem;
             transition: var(--transition);
-            color: var(--primary-red);
+            color: var(--primary-color);
         }
 
         .component-card:hover .arrow-icon {
-            color: var(--white);
+            color: var(--primary-color);
         }
 
         .component-card.expanded .arrow-icon {
             transform: rotate(180deg);
-            color: var(--white);
+            color: var(--text-color);
         }
 
         .component-description {
@@ -225,7 +273,7 @@
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.5s ease-out, margin-top 0.5s ease-out;
-            color: var(--light-gray);
+            color: var(--section-text-color);
             line-height: 1.6;
             opacity: 0;
         }
@@ -245,11 +293,11 @@
         }
 
         .how-it-works {
-            background: linear-gradient(135deg, var(--card-bg) 0%, #2a2a2a 100%);
+            background: linear-gradient(135deg, var(--bg-card) 0%, #2a2a2a 100%);
             border-radius: 12px;
             padding: 30px;
             box-shadow: var(--shadow-light);
-            border-left: 4px solid var(--primary-red);
+            border-left: 4px solid var(--primary-color);
             animation: slideInRight 0.6s ease-out;
             margin-top: 40px;
         }
@@ -257,7 +305,7 @@
         .how-it-works-title {
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--primary-red);
+            color: var(--primary-color);
             margin-bottom: 25px;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -274,7 +322,7 @@
             gap: 15px;
             align-items: flex-start;
             padding: 15px;
-            background: rgba(255, 59, 59, 0.05);
+            background: rgba(var(--primary-rgb), 0.05);
             border-radius: 8px;
             transition: var(--transition);
             animation: fadeInUp 0.6s ease-out;
@@ -288,28 +336,29 @@
         .step:nth-child(5) { animation-delay: 0.9s; }
 
         .step:hover {
-            background: rgba(255, 59, 59, 0.1);
+            background: rgba(var(--primary-rgb), 0.1);
             transform: translateX(5px);
         }
 
         .step-number {
             min-width: 35px;
             height: 35px;
-            background: var(--primary-red);
+            background: var(--primary-color);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
             font-size: 0.9rem;
-            color: var(--white);
+            color: var(--text-color);
             flex-shrink: 0;
+            box-shadow: var(--glow-sm);
         }
 
         .step-text {
             font-size: 0.95rem;
             line-height: 1.5;
-            color: #ddd;
+            color: var(--section-text-color);
             padding-top: 2px;
         }
 
@@ -319,15 +368,17 @@
             border-radius: 16px;
             padding: 50px 40px;
             box-shadow: var(--shadow);
-            margin-top: 60px;
+            margin-left: auto;
+            margin-right: auto;
             animation: fadeInUp 0.8s ease-out 0.4s both;
-            border: 1px solid rgba(255, 59, 59, 0.1);
+            border: 1px solid var(--border-color-light);
+            max-width: 82%;
         }
 
         .features-title {
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--primary-red);
+            color: var(--primary-color);
             margin-bottom: 25px;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -342,26 +393,6 @@
         .feature-item {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            align-items: flex-start;
-            padding: 20px;
-            border-radius: 8px;
-            transition: var(--transition);
-            animation: fadeInUp 0.6s ease-out;
-            animation-fill-mode: both;
-            background: rgba(255, 59, 59, 0.05);
-            border: 1px solid rgba(255, 59, 59, 0.2);
-        }
-
-        .feature-item:nth-child(1) { animation-delay: 0.5s; }
-        .feature-item:nth-child(2) { animation-delay: 0.6s; }
-        .feature-item:nth-child(3) { animation-delay: 0.7s; }
-        .feature-item:nth-child(4) { animation-delay: 0.8s; }
-        .feature-item:nth-child(5) { animation-delay: 0.9s; }
-
-        .feature-item {
-            display: flex;
-            flex-direction: column;
             gap: 15px;
             align-items: center;
             text-align: center;
@@ -370,34 +401,41 @@
             transition: var(--transition);
             animation: fadeInUp 0.6s ease-out;
             animation-fill-mode: both;
-            background: linear-gradient(135deg, rgba(255, 59, 59, 0.08) 0%, rgba(255, 59, 59, 0.02) 100%);
-            border: 1px solid rgba(255, 59, 59, 0.15);
+            background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.08) 0%, rgba(var(--primary-rgb), 0.02) 100%);
+            border: 2px solid transparent;
+            box-shadow: none;
         }
 
+        .feature-item:nth-child(1) { animation-delay: 0.5s; }
+        .feature-item:nth-child(2) { animation-delay: 0.6s; }
+        .feature-item:nth-child(3) { animation-delay: 0.7s; }
+        .feature-item:nth-child(4) { animation-delay: 0.8s; }
+        .feature-item:nth-child(5) { animation-delay: 0.9s; }
+
         .feature-item:hover {
-            background: linear-gradient(135deg, rgba(255, 59, 59, 0.15) 0%, rgba(255, 59, 59, 0.08) 100%);
+            background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.15) 0%, rgba(var(--primary-rgb), 0.08) 100%);
             transform: translateY(-5px);
-            box-shadow: var(--glow), 0 10px 30px rgba(255, 59, 59, 0.2);
-            border-color: var(--primary-red);
+            border: 2px solid var(--primary-color);
+            box-shadow: var(--glow), var(--shadow-lg);
         }
 
         .feature-icon {
             font-size: 2.5rem;
-            color: var(--primary-red);
+            color: var(--section-text-color);
             min-width: auto;
             text-align: center;
         }
 
         .feature-text {
             font-size: 0.85rem;
-            color: #bbb;
+            color: var(--section-text-color);
             line-height: 1.5;
         }
 
         .feature-title {
             font-size: 0.95rem;
             font-weight: 700;
-            color: var(--primary-red);
+            color: var(--section-text-color);
             margin-bottom: 5px;
         }
 
@@ -477,13 +515,13 @@
 
         @keyframes pulse {
             0% {
-                box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.7);
+                box-shadow: var(--shadow-primary-pulse);
             }
             70% {
-                box-shadow: 0 0 0 15px rgba(255, 59, 59, 0);
+                box-shadow: 0 0 0 15px rgba(var(--color-primary-rgb), 0);
             }
             100% {
-                box-shadow: 0 0 0 0 rgba(255, 59, 59, 0);
+                box-shadow: 0 0 0 0 rgba(var(--color-primary-rgb), 0);
             }
         }
 
@@ -514,8 +552,8 @@
             position: fixed;
             bottom: 40px;
             right: 40px;
-            background: linear-gradient(135deg, var(--primary-red) 0%, #cc2f2f 100%);
-            color: var(--white);
+            background: var(--primary-color);
+            color: var(--text-color);
             border: none;
             border-radius: 50px;
             padding: 16px 28px;
@@ -542,8 +580,8 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: #ffd700;
-            color: var(--dark-gray);
+            background: var(--primary-color);
+            color: var(--text-color);
             border-radius: 50%;
             min-width: 24px;
             height: 24px;
@@ -573,7 +611,7 @@
 
         /* ==================== MODAL CONTENT ==================== */
         .modal-content {
-            background: linear-gradient(135deg, var(--card-bg) 0%, #1f1f1f 100%);
+            background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
             border-radius: 16px;
             padding: 40px;
             max-width: 600px;
@@ -582,7 +620,7 @@
             overflow-y: auto;
             box-shadow: var(--shadow);
             animation: scaleIn 0.4s ease-out;
-            border: 1px solid rgba(255, 59, 59, 0.2);
+            border: 1px solid var(--border-color);
         }
 
         .modal-header {
@@ -590,14 +628,14 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 25px;
-            border-bottom: 2px solid rgba(255, 59, 59, 0.3);
+            border-bottom: 2px solid rgba(var(--primary-rgb), 0.3);
             padding-bottom: 15px;
         }
 
         .modal-title {
             font-size: 1.8rem;
             font-weight: 900;
-            color: var(--primary-red);
+            color: var(--primary-color);
             text-transform: uppercase;
             letter-spacing: 2px;
         }
@@ -605,7 +643,7 @@
         .modal-close {
             background: none;
             border: none;
-            color: var(--primary-red);
+            color: var(--primary-color);
             font-size: 2rem;
             cursor: pointer;
             transition: var(--transition);
@@ -635,7 +673,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: var(--primary-red);
+            color: var(--primary-color);
             font-size: 0.95rem;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -645,9 +683,9 @@
         .form-textarea {
             width: 100%;
             padding: 12px 15px;
-            border: 2px solid rgba(255, 59, 59, 0.3);
+            border: 2px solid rgba(var(--primary-rgb), 0.3);
             border-radius: 8px;
-            background: rgba(255, 59, 59, 0.05);
+            background: rgba(var(--primary-rgb), 0.05);
             color: var(--white);
             font-family: inherit;
             font-size: 0.95rem;
@@ -657,9 +695,9 @@
         .form-input:focus,
         .form-textarea:focus {
             outline: none;
-            border-color: var(--primary-red);
-            box-shadow: 0 0 15px rgba(255, 59, 59, 0.3);
-            background: rgba(255, 59, 59, 0.08);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.3);
+            background: rgba(var(--primary-rgb), 0.08);
         }
 
         .form-textarea {
@@ -669,8 +707,8 @@
         }
 
         .submit-btn {
-            background: linear-gradient(135deg, var(--primary-red) 0%, #cc2f2f 100%);
-            color: var(--white);
+            background: var(--primary-color);
+            color: var(--text-color);
             border: none;
             border-radius: 8px;
             padding: 14px 30px;
@@ -711,12 +749,12 @@
         /* ==================== SUCCESS MESSAGE ==================== */
         .success-message {
             display: none;
-            background: rgba(76, 175, 80, 0.2);
-            border: 2px solid #4caf50;
+            background: rgba(var(--primary-rgb), 0.2);
+            border: 2px solid var(--primary-color);
             border-radius: 8px;
             padding: 15px;
             margin-bottom: 20px;
-            color: #4caf50;
+            color: var(--primary-color);
             font-weight: 600;
             animation: slideUp 0.4s ease-out;
         }
@@ -728,12 +766,12 @@
         /* ==================== ERROR MESSAGE ==================== */
         .error-message {
             display: none;
-            background: rgba(244, 67, 54, 0.2);
-            border: 2px solid #f44336;
+            background: rgba(var(--primary-rgb), 0.2);
+            border: 2px solid var(--primary-color);
             border-radius: 8px;
             padding: 15px;
             margin-bottom: 20px;
-            color: #f44336;
+            color: var(--primary-color);
             font-weight: 600;
             animation: slideUp 0.4s ease-out;
         }
@@ -746,13 +784,13 @@
         .comments-section {
             margin-top: 35px;
             padding-top: 25px;
-            border-top: 2px solid rgba(255, 59, 59, 0.3);
+            border-top: 2px solid rgba(var(--primary-rgb), 0.3);
         }
 
         .comments-title {
             font-size: 1.3rem;
             font-weight: 700;
-            color: var(--primary-red);
+            color: var(--primary-color);
             margin-bottom: 20px;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -767,8 +805,8 @@
         }
 
         .comment-card {
-            background: linear-gradient(135deg, rgba(255, 59, 59, 0.08) 0%, rgba(255, 59, 59, 0.02) 100%);
-            border: 1px solid rgba(255, 59, 59, 0.2);
+            background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.08) 0%, rgba(var(--primary-rgb), 0.02) 100%);
+            border: 1px solid rgba(var(--primary-rgb), 0.2);
             border-radius: 8px;
             padding: 15px;
             animation: slideUp 0.5s ease-out;
@@ -780,7 +818,7 @@
         .comment-card:nth-child(3) { animation-delay: 0.3s; }
 
         .comment-text {
-            color: #ddd;
+            color: var(--text-secondary);
             font-size: 0.9rem;
             line-height: 1.5;
             margin-bottom: 8px;
@@ -788,7 +826,7 @@
 
         .comment-date {
             font-size: 0.75rem;
-            color: #888;
+            color: var(--text-muted);
             font-style: italic;
         }
 
@@ -804,7 +842,7 @@
             display: none;
             margin-top: 35px;
             padding-top: 25px;
-            border-top: 2px solid rgba(255, 59, 59, 0.3);
+            border-top: 2px solid rgba(var(--primary-rgb), 0.3);
         }
 
         .admin-panel.active {
@@ -821,8 +859,8 @@
         }
 
         .pending-item {
-            background: rgba(255, 215, 0, 0.1);
-            border: 1px solid rgba(255, 215, 0, 0.3);
+            background: rgba(var(--primary-rgb), 0.1);
+            border: 1px solid rgba(var(--primary-rgb), 0.3);
             border-radius: 8px;
             padding: 15px;
             margin-bottom: 15px;
@@ -940,7 +978,7 @@
         .admin-login-input:focus {
             outline: none;
             border-color: #ffd700;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.3);
         }
 
         .admin-login-buttons {
@@ -952,8 +990,8 @@
         .admin-login-submit {
             flex: 1;
             padding: 15px;
-            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
-            color: #000;
+            background: var(--primary-color);
+            color: var(--text-color);
             border: none;
             border-radius: 10px;
             font-size: 1rem;
@@ -964,7 +1002,7 @@
 
         .admin-login-submit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+            box-shadow: 0 5px 20px rgba(var(--primary-rgb), 0.4);
         }
 
         .admin-login-cancel {
@@ -1155,14 +1193,14 @@
             text-align: center;
             margin-top: 60px;
             padding-top: 30px;
-            border-top: 1px solid rgba(255, 59, 59, 0.2);
+            border-top: 1px solid rgba(var(--primary-rgb), 0.2);
             color: #888;
             font-size: 0.9rem;
             animation: fadeIn 1.5s ease-out 1s both;
         }
 
         .footer a {
-            color: var(--primary-red);
+            color: var(--primary-color);
             text-decoration: none;
             transition: var(--transition);
         }
@@ -1206,7 +1244,7 @@
 
         .auth-title {
             font-size: 2.2rem;
-            color: var(--primary-red);
+            color: var(--primary-color);
             text-align: center;
             margin-bottom: 15px;
             font-weight: 900;
@@ -1237,14 +1275,14 @@
 
         .auth-input:focus {
             outline: none;
-            border-color: var(--primary-red);
-            box-shadow: 0 0 15px rgba(255, 59, 59, 0.3);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.3);
         }
 
         .auth-button {
             padding: 15px;
-            background: linear-gradient(135deg, var(--primary-red) 0%, #ff6b6b 100%);
-            color: white;
+            background: var(--primary-color);
+            color: var(--text-color);
             border: none;
             border-radius: 10px;
             font-size: 1.1rem;
@@ -1255,7 +1293,7 @@
 
         .auth-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(255, 59, 59, 0.4);
+            box-shadow: var(--glow-lg);
         }
 
         .auth-button:disabled {
@@ -1264,7 +1302,7 @@
         }
 
         .auth-error {
-            color: #ff6b6b;
+            color: var(--primary-color);
             text-align: center;
             font-size: 0.9rem;
             display: none;
@@ -1281,7 +1319,7 @@
 
         .restricted-title {
             font-size: 2rem;
-            color: var(--primary-red);
+            color: var(--primary-color);
             margin-bottom: 20px;
         }
 
@@ -1292,41 +1330,43 @@
             line-height: 1.6;
         }
 
-        .user-info {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 59, 59, 0.1);
-            border: 2px solid var(--primary-red);
-            padding: 15px 20px;
-            border-radius: 10px;
-            color: white;
-            font-size: 0.9rem;
-            z-index: 1000;
-            display: none;
-        }
-
-        .user-info.show {
-            display: block;
-        }
-
-        .user-info-text {
-            margin-bottom: 10px;
-        }
-
-        .logout-btn {
-            background: var(--primary-red);
-            color: white;
+        .logout-btn-sidebar {
+            width: 100%;
+            background: var(--primary-color);
+            color: var(--text-color);
             border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
+            padding: 12px 20px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.95rem;
+            font-weight: 600;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 10px 0;
+            box-shadow: var(--shadow-md);
         }
 
-        .logout-btn:hover {
-            background: #ff6b6b;
+        .logout-btn-sidebar:hover {
+            background: var(--primary-color);
+            box-shadow: var(--glow);
+            transform: translateY(-2px);
+        }
+
+        .logout-btn-sidebar:active {
+            transform: translateY(0);
+        }
+
+        .logout-btn-sidebar .icon {
+            font-size: 1.1rem;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: rgba(var(--primary-rgb), 0.2);
+            margin: 10px 0;
         }
 
         .content {
@@ -1354,20 +1394,544 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            color: var(--primary-red);
+            color: var(--primary-color);
             font-weight: 900;
             font-size: 0.9rem;
             letter-spacing: 2px;
             text-transform: uppercase;
             white-space: nowrap;
-            text-shadow: 0 0 10px rgba(0, 0, 0, 1), 0 0 20px rgba(255, 59, 59, 0.8);
+            text-shadow: 0 0 10px rgba(0, 0, 0, 1), 0 0 20px rgba(var(--primary-rgb), 0.8);
             pointer-events: none;
             z-index: 10;
         }
 
+        /* ==================== SIDEBAR STYLING ==================== */
+        .hamburger-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--primary-color);
+            color: var(--text-color);
+            border: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 24px;
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger-btn:hover {
+            transform: scale(1.1);
+            box-shadow: var(--glow);
+        }
+
+        .sidebar {
+            position: fixed;
+            left: -350px;
+            top: 0;
+            width: 350px;
+            height: 100vh;
+            background: linear-gradient(135deg, rgba(42, 42, 42, 0.95) 0%, rgba(26, 26, 26, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            box-shadow: 4px 0 30px rgba(0, 0, 0, 0.5);
+            border-right: 1px solid rgba(var(--primary-rgb), 0.2);
+            padding: 20px;
+            overflow-y: auto;
+            transition: left 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            z-index: 998;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(var(--primary-rgb), 0.2);
+            margin-bottom: 20px;
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin: 0 auto 15px;
+            box-shadow: var(--glow-sm);
+        }
+
+        .sidebar-username {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: white;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .role-badge.admin {
+            background: var(--primary-color);
+            color: var(--text-color);
+        }
+
+        .role-badge.team {
+            background: linear-gradient(135deg, #4caf50, #66bb6a);
+            color: white;
+        }
+
+        .role-badge.visitor {
+            background: linear-gradient(135deg, #2196F3, #42a5f5);
+            color: white;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: #ddd;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .sidebar-menu a:hover {
+            background: rgba(var(--primary-rgb), 0.2);
+            color: var(--primary-color);
+            transform: translateX(5px);
+        }
+
+        .sidebar-menu a.active {
+            background: rgba(var(--primary-rgb), 0.3);
+            color: var(--primary-color);
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .sidebar-menu .icon {
+            font-size: 18px;
+            min-width: 24px;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: rgba(var(--primary-rgb), 0.2);
+            margin: 20px 0;
+        }
+
+        .settings-panel {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(42, 42, 42, 0.98) 0%, rgba(26, 26, 26, 0.98) 100%);
+            padding: 20px;
+            overflow-y: auto;
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        .settings-panel.active {
+            display: block;
+        }
+
+        .settings-header {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .settings-header:hover {
+            opacity: 0.8;
+        }
+
+        .settings-group {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: rgba(var(--primary-rgb), 0.05);
+            border-radius: 8px;
+            border-left: 3px solid rgba(var(--primary-rgb), 0.3);
+        }
+
+        .settings-group h4 {
+            color: var(--primary-color);
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+        }
+
+        .toggle-switch label {
+            color: #ddd;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 26px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        .color-picker-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .color-input-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+        }
+
+        .color-input-wrapper label {
+            color: #ddd;
+            font-size: 0.9rem;
+        }
+
+        .color-input-wrapper input[type="color"] {
+            width: 50px;
+            height: 40px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .reset-btn {
+            width: 100%;
+            padding: 10px;
+            background: rgba(var(--primary-rgb), 0.3);
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .reset-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 997;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            --primary-red: #FF3B3B;
+            --dark-gray: #1a1a1a;
+            --light-gray: #f5f5f5;
+        }
+
+        body.light-mode {
+            --primary-red: #D32F2F;
+            --dark-gray: #f5f5f5;
+            --light-gray: #1a1a1a;
+            --text-primary: #f5f5f5;
+            --text-secondary: #555;
+            --bg-primary: #f5f5f5;
+            --bg-secondary: #ffffff;
+            --section-text-color: #ffffff;
+            background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 50%, #eeeeee 100%);
+            color: var(--text-primary);
+        }
+
+        body.light-mode .sidebar {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 245, 245, 0.95) 100%);
+            border-right: 1px solid rgba(211, 47, 47, 0.2);
+            color: var(--text-primary);
+        }
+
+        body.light-mode .sidebar-menu a {
+            color: var(--text-secondary);
+        }
+
+        body.light-mode .sidebar-menu a:hover {
+            background: rgba(211, 47, 47, 0.1);
+            color: #D32F2F;
+        }
+
+        body.light-mode .auth-screen,
+        body.light-mode .modal-content,
+        body.light-mode .modal-overlay {
+            background: white;
+            color: var(--text-primary);
+        }
+        
+        /* Additional light mode text styling */
+        body.light-mode h1,
+        body.light-mode h2,
+        body.light-mode h3,
+        body.light-mode h4,
+        body.light-mode h5,
+        body.light-mode h6 {
+            color: var(--text-primary);
+        }
+        
+        body.light-mode p,
+        body.light-mode span,
+        body.light-mode a,
+        body.light-mode div,
+        body.light-mode label {
+            color: var(--text-primary);
+        }
+        
+        body.light-mode .comment-item,
+        body.light-mode .suggestion-item {
+            background: #f9f9f9;
+            border-color: #ddd;
+        }
+        
+        body.light-mode .auth-input,
+        body.light-mode input[type="text"],
+        body.light-mode input[type="password"],
+        body.light-mode textarea,
+        body.light-mode select {
+            background: #f5f5f5;
+            color: var(--text-primary);
+            border-color: #ddd;
+        }
+        
+        body.light-mode .auth-input::placeholder,
+        body.light-mode textarea::placeholder {
+            color: #999;
+        }
+
     </style>
+    
+    <!-- Early theme loading script to prevent flicker -->
+    <script>
+        (function() {
+            // Helper function to convert hex to RGB
+            function hexToRgb(hex) {
+                const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '255, 59, 59';
+            }
+            
+            const defaultTheme = {
+                primaryColor: '#FF3B3B',
+                darkMode: true
+            };
+            
+            const storedTheme = localStorage.getItem('userTheme');
+            const theme = storedTheme ? JSON.parse(storedTheme) : defaultTheme;
+            
+            // Apply theme immediately with unified single primary color system
+            const primaryRgb = hexToRgb(theme.primaryColor);
+            document.documentElement.style.setProperty('--primary-color', theme.primaryColor);
+            document.documentElement.style.setProperty('--primary-rgb', primaryRgb);
+            document.documentElement.style.setProperty('--shadow-sm', `0 0 10px rgba(${primaryRgb}, 0.3)`);
+            document.documentElement.style.setProperty('--shadow-md', `0 0 15px rgba(${primaryRgb}, 0.3)`);
+            document.documentElement.style.setProperty('--shadow-lg', `0 0 20px rgba(${primaryRgb}, 0.4)`);
+            document.documentElement.style.setProperty('--shadow-xl', `0 10px 30px rgba(${primaryRgb}, 0.2)`);
+            document.documentElement.style.setProperty('--shadow-pulse', `0 0 0 0 rgba(${primaryRgb}, 0.7)`);
+            document.documentElement.style.setProperty('--glow', `0 0 20px rgba(${primaryRgb}, 0.5)`);
+            document.documentElement.style.setProperty('--glow-sm', `0 0 10px rgba(${primaryRgb}, 0.4)`);
+            document.documentElement.style.setProperty('--glow-lg', `0 0 30px rgba(${primaryRgb}, 0.6)`);
+            document.documentElement.style.setProperty('--border-color', `rgba(${primaryRgb}, 0.2)`);
+            document.documentElement.style.setProperty('--border-color-light', `rgba(${primaryRgb}, 0.1)`);
+            document.documentElement.style.setProperty('--border-color-dark', `rgba(${primaryRgb}, 0.3)`);
+            
+            if (theme.darkMode) {
+                if (document.body) document.body.classList.add('dark-mode');
+                document.documentElement.style.setProperty('--text-color', '#ffffff');
+                document.documentElement.style.setProperty('--text-primary', '#ffffff');
+                document.documentElement.style.setProperty('--text-secondary', 'rgba(255, 255, 255, 0.7)');
+                document.documentElement.style.setProperty('--bg-main', '#0f0f0f');
+                document.documentElement.style.setProperty('--bg-main-alt', '#1a1a1a');
+                document.documentElement.style.setProperty('--section-text-color', '#ffffff');
+            } else {
+                if (document.body) document.body.classList.add('light-mode');
+                // LIGHT MODE: ALL TEXT MUST BE WHITE
+                document.documentElement.style.setProperty('--text-color', '#ffffff');
+                document.documentElement.style.setProperty('--text-primary', '#ffffff');
+                document.documentElement.style.setProperty('--text-secondary', '#ffffff');
+                document.documentElement.style.setProperty('--text-muted', '#ffffff');
+                document.documentElement.style.setProperty('--text-light', '#ffffff');
+                document.documentElement.style.setProperty('--bg-main', '#f5f5f5');
+                document.documentElement.style.setProperty('--bg-main-alt', '#ffffff');
+                document.documentElement.style.setProperty('--section-text-color', '#ffffff');
+            }
+        })();
+    </script>
 </head>
 <body>
+    <!-- Hamburger Menu Button -->
+    <button class="hamburger-btn" id="hamburgerBtn">☰</button>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar" id="sidebar">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header">
+            <div class="user-avatar" id="userAvatarSidebar">👤</div>
+            <div class="sidebar-username" id="sidebarUsername">User</div>
+            <span class="role-badge" id="sidebarRoleBadge">Visitor</span>
+        </div>
+
+        <!-- Main Menu -->
+        <ul class="sidebar-menu" id="sidebarMenu">
+            <li><a href="#home" class="menu-item" data-item="home"><span class="icon">🏠</span> Home</a></li>
+            <li><a href="#components" class="menu-item" data-item="components"><span class="icon">⚙️</span> Main Components</a></li>
+            <li><a href="#how-it-works" class="menu-item" data-item="how-it-works"><span class="icon">🎯</span> How It Works</a></li>
+            <li><a href="#features" class="menu-item" data-item="features"><span class="icon">✨</span> Key Features</a></li>
+            <li><a href="#updates" class="menu-item" data-item="updates"><span class="icon">💬</span> Project Updates</a></li>
+            <li><a href="#settings" class="menu-item settings-link" data-item="settings"><span class="icon">⚙️</span> Settings</a></li>
+        </ul>
+
+        <div class="sidebar-divider"></div>
+
+        <!-- Settings Panel -->
+        <div class="settings-panel" id="settingsPanel">
+            <div class="settings-header">
+                <span>←</span> Settings
+            </div>
+
+            <!-- Dark Mode Toggle -->
+            <div class="settings-group">
+                <h4>Display</h4>
+                <div class="toggle-switch">
+                    <label>Dark Mode</label>
+                    <label class="switch">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Color Theme Customization -->
+            <div class="settings-group">
+                <h4>Theme Color</h4>
+                <div class="color-picker-group">
+                    <div class="color-input-wrapper">
+                        <label>Primary Color</label>
+                        <input type="color" id="primaryColorPicker" value="#FF3B3B">
+                    </div>
+                </div>
+                <button class="reset-btn" id="resetThemeBtn">Reset to Default</button>
+            </div>
+        </div>
+
+        <!-- Logout Button -->
+        <div class="sidebar-divider" id="logoutDivider" style="display: none; margin-top: auto;"></div>
+        <button id="sidebarLogout" class="logout-btn-sidebar" style="display: none;">
+            <span class="icon">🚪</span> Logout
+        </button>
+    </div>
+
     <!-- Authentication Screen -->
     <div class="auth-screen" id="authScreen">
         <div class="auth-box">
@@ -1386,13 +1950,6 @@
                 <div class="auth-error" id="authError"></div>
             </form>
         </div>
-    </div>
-
-    <!-- User Info (Top Right) -->
-    <div class="user-info" id="userInfo">
-        <div class="user-info-text">👤 <strong id="userRole"></strong></div>
-        <div class="user-info-text">📋 <strong id="userAccess"></strong></div>
-        <button class="logout-btn" id="logoutBtn">Logout</button>
     </div>
 
     <!-- Main Content (Hidden until authenticated) -->
@@ -1542,7 +2099,7 @@
     </div>
 
     <button class="feedback-btn" id="feedbackBtn">
-        💬 التحديثات
+        <span class="feedback-text" data-en="💬 Updates" data-ar="💬 التحديثات">💬 Updates</span>
         <span class="feedback-badge" id="badgeCount" style="display: none;">0</span>
     </button>
 
@@ -1882,8 +2439,14 @@
             const textArea = document.getElementById('feedbackText');
             if (textArea) textArea.placeholder = t('commentText');
             
-            const logoutBtn = document.getElementById('logoutBtn');
-            if (logoutBtn) logoutBtn.textContent = t('logout');
+            // Update sidebar logout button
+            const sidebarLogout = document.getElementById('sidebarLogout');
+            if (sidebarLogout) {
+                const logoutSpan = sidebarLogout.querySelector('span.icon');
+                if (logoutSpan) {
+                    sidebarLogout.innerHTML = '<span class="icon">' + logoutSpan.innerHTML + '</span> ' + t('logout');
+                }
+            }
             
             if (typeof loadComments === 'function') {
                 loadComments();
@@ -1974,10 +2537,6 @@
         const authSubmitBtn = document.getElementById('authSubmitBtn');
         const authError = document.getElementById('authError');
         const mainContent = document.getElementById('mainContent');
-        const userInfo = document.getElementById('userInfo');
-        const userRoleSpan = document.getElementById('userRole');
-        const userAccessSpan = document.getElementById('userAccess');
-        const logoutBtn = document.getElementById('logoutBtn');
 
         // Handle authentication form
         authForm.addEventListener('submit', async (e) => {
@@ -2025,23 +2584,9 @@
             // Save to localStorage for persistence
             localStorage.setItem('userRole', role);
             localStorage.setItem('userName', name);
-            
-            // Determine access level
-            let roleDisplay = role;
-            let accessDisplay = '';
-            
-            if (role === 'Admin') {
-                accessDisplay = 'Admin Access';
-            } else if (role === 'Team') {
-                accessDisplay = 'Full Access';
-            } else {
-                accessDisplay = 'Limited Access';
-            }
 
-            // Show user info with name
-            userRoleSpan.textContent = name + ' (' + roleDisplay + ')';
-            userAccessSpan.textContent = accessDisplay;
-            userInfo.classList.add('show');
+            // Update sidebar user info
+            updateSidebarUser();
 
             // Show main content
             authScreen.classList.add('hidden');
@@ -2104,8 +2649,8 @@
             }
         }
 
-        // Logout
-        logoutBtn.addEventListener('click', () => {
+        // Function to handle logout
+        function performLogout() {
             currentUserName = '';
             currentUserRole = null;
             // Clear localStorage
@@ -2116,8 +2661,13 @@
             authPassword.value = '';
             authScreen.classList.remove('hidden');
             mainContent.classList.remove('visible');
-            userInfo.classList.remove('show');
-        });
+            
+            // Close sidebar if open
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            if (sidebar) sidebar.classList.remove('active');
+            if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+        }
 
         // ==================== FEEDBACK SYSTEM ==================== //
         function initFeedbackSystem() {
@@ -2244,14 +2794,13 @@
                 return;
             }
 
-            submitBtn.disabled = true;
-            spinner.style.display = 'inline-block';
-            errorMsg.classList.remove('show');
-            successMsg.classList.remove('show');
+            if (submitBtn) submitBtn.disabled = true;
+            if (spinner) spinner.style.display = 'inline-block';
+            if (errorMsg) errorMsg.classList.remove('show');
+            if (successMsg) successMsg.classList.remove('show');
 
             try {
-                if (!database) {
-                    commentsList.innerHTML = '<div class="no-comments">Firebase not configured</div>';
+                if (database) {
                     const newRef = firebase.database().ref('suggestions').push();
                     await newRef.set({
                         title: title,
@@ -2263,25 +2812,25 @@
                     });
 
                     // Show success
-                    successMsg.classList.add('show');
-                    form.reset();
+                    if (successMsg) successMsg.classList.add('show');
+                    if (form) form.reset();
 
                     // Reload comments and pending count
                     setTimeout(() => {
                         loadComments();
                         loadPendingCount();
-                        successMsg.classList.remove('show');
+                        if (successMsg) successMsg.classList.remove('show');
                     }, 2000);
                 } else {
-                    // Demo mode - no Firebase
+                    // Firebase not configured
                     showError('Firebase not configured. Setup required.');
                 }
             } catch (error) {
                 console.error('Error submitting feedback:', error);
                 showError('Failed to submit. Please try again.');
             } finally {
-                submitBtn.disabled = false;
-                spinner.style.display = 'none';
+                if (submitBtn) submitBtn.disabled = false;
+                if (spinner) spinner.style.display = 'none';
             }
         }
 
@@ -2329,13 +2878,13 @@
                     let statusBadge = '';
                     let cardStyle = '';
                     if (comment.status === 'approved') {
-                        statusBadge = '<span style="background: #28a745; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">✓ APPROVED</span>';
+                        statusBadge = `<span style="background: var(--primary-color); color: var(--text-color); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">✓ APPROVED</span>`;
                     } else if (comment.status === 'rejected') {
-                        statusBadge = '<span style="background: #dc3545; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">✕ DECLINED</span>';
-                        cardStyle = 'opacity: 0.6; border-left: 3px solid #dc3545;';
+                        statusBadge = `<span style="background: var(--primary-color); color: var(--text-color); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">✕ DECLINED</span>`;
+                        cardStyle = `opacity: 0.6; border-left: 3px solid var(--primary-color);`;
                     } else if (comment.status === 'pending') {
-                        statusBadge = '<span style="background: #ffc107; color: #000; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">⏳ PENDING</span>';
-                        cardStyle = 'border-left: 3px solid #ffc107;';
+                        statusBadge = `<span style="background: var(--primary-color); color: var(--text-color); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">⏳ PENDING</span>`;
+                        cardStyle = `border-left: 3px solid var(--primary-color);`;
                     }
 
                     const deleteBtn = currentUserRole === 'Admin' 
@@ -2348,27 +2897,27 @@
 
                     const repliesHtml = repliesArray.length
                         ? repliesArray.map(reply => `
-                            <div style="margin-top: 6px; padding-left: 10px; border-left: 2px solid rgba(255, 59, 59, 0.3);">
-                                <div style="font-size: 0.85rem; color: #ddd;">${escapeHtml(reply.text)}</div>
-                                <div style="font-size: 0.75rem; color: #999; margin-top: 2px;">👤 <strong>${escapeHtml(reply.userName || 'Anonymous')}</strong> • ${reply.timestamp ? new Date(reply.timestamp).toLocaleDateString() : 'Unknown'}</div>
+                            <div style="margin-top: 6px; padding-left: 10px; border-left: 2px solid rgba(var(--primary-rgb), 0.3);">
+                                <div style="font-size: 0.85rem; color: var(--text-secondary);">${escapeHtml(reply.text)}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">👤 <strong>${escapeHtml(reply.userName || 'Anonymous')}</strong> • ${reply.timestamp ? new Date(reply.timestamp).toLocaleDateString() : 'Unknown'}</div>
                             </div>
                         `).join('')
-                        : '<div style="font-size: 0.8rem; color: #777; margin-top: 6px;">No replies yet.</div>';
+                        : '<div style="font-size: 0.8rem; color: var(--text-light); margin-top: 6px;">No replies yet.</div>';
 
                     const html = `
                         <div class="comment-card" style="animation-delay: ${index * 0.1}s; ${cardStyle}">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                <strong style="color: var(--primary-red);">${escapeHtml(comment.title)}</strong>
+                                <strong style="color: var(--primary-color);">${escapeHtml(comment.title)}</strong>
                                 <div style="display: flex; align-items: center; gap: 8px;">
                                     ${statusBadge}
                                     ${deleteBtn}
                                 </div>
                             </div>
                             <div class="comment-text">${escapeHtml(comment.text)}</div>
-                            <div style="font-size: 0.85rem; color: #999; margin-top: 6px;">👤 <strong>${escapeHtml(comment.userName || 'Anonymous')}</strong></div>
+                            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 6px;">👤 <strong>${escapeHtml(comment.userName || 'Anonymous')}</strong></div>
                             <div class="comment-date">📅 ${date}</div>
-                            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
-                                <div style="font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: #ccc;">Replies</div>
+                            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(var(--primary-rgb), 0.1);">
+                                <div style="font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-secondary);">Replies</div>
                                 <div>${repliesHtml}</div>
                                 <div style="display: flex; gap: 8px; margin-top: 10px;">
                                     <input type="text" id="reply-${comment.id}" class="auth-input" placeholder="Write a reply..." style="flex: 1; padding: 8px 10px; font-size: 0.85rem;" />
@@ -2475,7 +3024,7 @@
                         : 'Unknown';
                     const html = `
                         <div class="pending-item">
-                            <strong style="color: var(--primary-red);">${escapeHtml(item.title)}</strong>
+                            <strong style="color: var(--primary-color);">${escapeHtml(item.title)}</strong>
                             <div class="pending-text">${escapeHtml(item.text)}</div>
                             <div class="pending-meta">📅 ${date}</div>
                             <div class="admin-buttons">
@@ -2573,6 +3122,279 @@
             div.textContent = text;
             return div.innerHTML;
         }
+
+        // ==================== SIDEBAR & THEME SYSTEM ==================== //
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const settingsPanel = document.getElementById('settingsPanel');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const primaryColorPicker = document.getElementById('primaryColorPicker');
+        const resetThemeBtn = document.getElementById('resetThemeBtn');
+        const sidebarUsername = document.getElementById('sidebarUsername');
+        const sidebarRoleBadge = document.getElementById('sidebarRoleBadge');
+        const sidebarLogout = document.getElementById('sidebarLogout');
+        const logoutDivider = document.getElementById('logoutDivider');
+
+        // Default theme colors (single primary color)
+        const defaultTheme = {
+            primaryColor: '#FF3B3B',
+            darkMode: true
+        };
+
+        // Load theme on page load
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('userTheme');
+            if (savedTheme) {
+                const theme = JSON.parse(savedTheme);
+                applyTheme(theme);
+            } else {
+                applyTheme(defaultTheme);
+            }
+        }
+
+        // Helper function to convert hex color to RGB values
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '255, 59, 59';
+        }
+
+        // Apply theme
+        function applyTheme(theme) {
+            // Convert hex color to RGB for use in rgba() values
+            const primaryRgb = hexToRgb(theme.primaryColor);
+            
+            // Set CSS variables with new names
+            document.documentElement.style.setProperty('--primary-color', theme.primaryColor);
+            document.documentElement.style.setProperty('--primary-rgb', primaryRgb);
+            
+            // Update shadow and glow variables with new primary color
+            document.documentElement.style.setProperty('--shadow-sm', `0 0 10px rgba(${primaryRgb}, 0.3)`);
+            document.documentElement.style.setProperty('--shadow-md', `0 0 15px rgba(${primaryRgb}, 0.3)`);
+            document.documentElement.style.setProperty('--shadow-lg', `0 0 20px rgba(${primaryRgb}, 0.4)`);
+            document.documentElement.style.setProperty('--shadow-xl', `0 10px 30px rgba(${primaryRgb}, 0.2)`);
+            document.documentElement.style.setProperty('--shadow-pulse', `0 0 0 0 rgba(${primaryRgb}, 0.7)`);
+            document.documentElement.style.setProperty('--glow', `0 0 20px rgba(${primaryRgb}, 0.5)`);
+            document.documentElement.style.setProperty('--glow-sm', `0 0 10px rgba(${primaryRgb}, 0.4)`);
+            document.documentElement.style.setProperty('--glow-lg', `0 0 30px rgba(${primaryRgb}, 0.6)`);
+            
+            // Update border colors with new primary color
+            document.documentElement.style.setProperty('--border-color', `rgba(${primaryRgb}, 0.2)`);
+            document.documentElement.style.setProperty('--border-color-light', `rgba(${primaryRgb}, 0.1)`);
+            document.documentElement.style.setProperty('--border-color-dark', `rgba(${primaryRgb}, 0.3)`);
+
+            // Apply dark/light mode
+            if (theme.darkMode) {
+                document.body.classList.remove('light-mode');
+                document.body.classList.add('dark-mode');
+                darkModeToggle.checked = true;
+                document.documentElement.style.setProperty('--text-color', '#ffffff');
+                document.documentElement.style.setProperty('--text-primary', '#ffffff');
+                document.documentElement.style.setProperty('--text-secondary', 'rgba(255, 255, 255, 0.7)');
+                document.documentElement.style.setProperty('--bg-main', '#0f0f0f');
+                document.documentElement.style.setProperty('--bg-main-alt', '#1a1a1a');
+                document.documentElement.style.setProperty('--section-text-color', '#ffffff');
+            } else {
+                document.body.classList.remove('dark-mode');
+                document.body.classList.add('light-mode');
+                darkModeToggle.checked = false;
+                // LIGHT MODE: ALL TEXT MUST BE WHITE (#FFFFFF)
+                document.documentElement.style.setProperty('--text-color', '#ffffff');
+                document.documentElement.style.setProperty('--text-primary', '#ffffff');
+                document.documentElement.style.setProperty('--text-secondary', '#ffffff');
+                document.documentElement.style.setProperty('--text-muted', '#ffffff');
+                document.documentElement.style.setProperty('--text-light', '#ffffff');
+                document.documentElement.style.setProperty('--bg-main', '#f5f5f5');
+                document.documentElement.style.setProperty('--bg-main-alt', '#ffffff');
+                document.documentElement.style.setProperty('--section-text-color', '#ffffff');
+            }
+
+            // Update color picker
+            primaryColorPicker.value = theme.primaryColor;
+
+            // Save to localStorage
+            localStorage.setItem('userTheme', JSON.stringify(theme));
+        }
+
+        // Sidebar toggle
+        hamburgerBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
+        });
+
+        // Close sidebar on overlay click
+        sidebarOverlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+            settingsPanel.classList.remove('active');
+        });
+
+        // Settings link
+        document.querySelectorAll('.settings-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                settingsPanel.classList.add('active');
+            });
+        });
+
+        // Back button in settings
+        document.querySelector('.settings-header').addEventListener('click', () => {
+            settingsPanel.classList.remove('active');
+        });
+
+        // Dark mode toggle
+        darkModeToggle.addEventListener('change', () => {
+            const currentTheme = JSON.parse(localStorage.getItem('userTheme')) || defaultTheme;
+            currentTheme.darkMode = darkModeToggle.checked;
+            applyTheme(currentTheme);
+        });
+        // Color picker changes (real-time with 'input' and final with 'change')
+        primaryColorPicker.addEventListener('input', () => {
+            const currentTheme = JSON.parse(localStorage.getItem('userTheme')) || defaultTheme;
+            currentTheme.primaryColor = primaryColorPicker.value;
+            
+            // Apply immediately with RGB conversion
+            const primaryRgb = hexToRgb(primaryColorPicker.value);
+            document.documentElement.style.setProperty('--primary-color', primaryColorPicker.value);
+            document.documentElement.style.setProperty('--primary-rgb', primaryRgb);
+            document.documentElement.style.setProperty('--shadow-sm', `0 0 10px rgba(${primaryRgb}, 0.3)`);
+            document.documentElement.style.setProperty('--shadow-md', `0 0 15px rgba(${primaryRgb}, 0.3)`);
+            document.documentElement.style.setProperty('--shadow-lg', `0 0 20px rgba(${primaryRgb}, 0.4)`);
+            document.documentElement.style.setProperty('--shadow-xl', `0 10px 30px rgba(${primaryRgb}, 0.2)`);
+            document.documentElement.style.setProperty('--shadow-pulse', `0 0 0 0 rgba(${primaryRgb}, 0.7)`);
+            document.documentElement.style.setProperty('--glow', `0 0 20px rgba(${primaryRgb}, 0.5)`);
+            document.documentElement.style.setProperty('--glow-sm', `0 0 10px rgba(${primaryRgb}, 0.4)`);
+            document.documentElement.style.setProperty('--glow-lg', `0 0 30px rgba(${primaryRgb}, 0.6)`);
+            document.documentElement.style.setProperty('--border-color', `rgba(${primaryRgb}, 0.2)`);
+            document.documentElement.style.setProperty('--border-color-light', `rgba(${primaryRgb}, 0.1)`);
+            document.documentElement.style.setProperty('--border-color-dark', `rgba(${primaryRgb}, 0.3)`);
+        });
+
+        primaryColorPicker.addEventListener('change', () => {
+            const currentTheme = JSON.parse(localStorage.getItem('userTheme')) || defaultTheme;
+            currentTheme.primaryColor = primaryColorPicker.value;
+            applyTheme(currentTheme);
+        });
+
+        // Reset theme
+        resetThemeBtn.addEventListener('click', () => {
+            applyTheme(defaultTheme);
+            alert('Theme reset to default!');
+        });
+
+        // Update sidebar user info when logged in
+        function updateSidebarUser() {
+            if (currentUserRole && currentUserName) {
+                sidebarUsername.textContent = currentUserName;
+                sidebarRoleBadge.textContent = currentUserRole.toUpperCase();
+                sidebarRoleBadge.className = `role-badge ${currentUserRole.toLowerCase()}`;
+                sidebarLogout.style.display = 'flex';
+                logoutDivider.style.display = 'block';
+            }
+        }
+        // Sidebar logout with confirmation
+        sidebarLogout.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Create confirmation dialog
+            const confirmDialog = document.createElement('div');
+            confirmDialog.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 9999;
+                animation: fadeIn 0.3s ease;
+            `;
+            
+            const dialogContent = document.createElement('div');
+            dialogContent.style.cssText = `
+                background: var(--bg-secondary);
+                color: var(--text-primary);
+                padding: 30px;
+                border-radius: 12px;
+                text-align: center;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                max-width: 300px;
+                animation: slideUp 0.3s ease;
+            `;
+            
+            dialogContent.innerHTML = `
+                <h3 style="margin: 0 0 15px 0; font-size: 1.2rem;">Confirm Logout</h3>
+                <p style="margin: 0 0 25px 0; opacity: 0.8;">Are you sure you want to logout?</p>
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button class="confirm-btn" style="
+                        background: var(--primary-color);
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-weight: 600;
+                        transition: all 0.3s ease;
+                    ">Yes, Logout</button>
+                    <button class="cancel-btn" style="
+                        background: var(--card-bg);
+                        color: var(--text-primary);
+                        border: 1px solid var(--primary-color);
+                        padding: 10px 20px;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-weight: 600;
+                        transition: all 0.3s ease;
+                    ">Cancel</button>
+                </div>
+            `;
+            
+            confirmDialog.appendChild(dialogContent);
+            document.body.appendChild(confirmDialog);
+            
+            const confirmBtn = dialogContent.querySelector('.confirm-btn');
+            const cancelBtn = dialogContent.querySelector('.cancel-btn');
+            
+            confirmBtn.addEventListener('click', () => {
+                confirmDialog.remove();
+                performLogout();
+            });
+            
+            confirmBtn.addEventListener('mouseover', () => {
+                confirmBtn.style.boxShadow = '0 0 20px rgba(var(--primary-rgb), 0.6)';
+                confirmBtn.style.transform = 'translateY(-2px)';
+            });
+            
+            confirmBtn.addEventListener('mouseout', () => {
+                confirmBtn.style.boxShadow = 'none';
+                confirmBtn.style.transform = 'translateY(0)';
+            });
+            
+            cancelBtn.addEventListener('click', () => {
+                confirmDialog.remove();
+            });
+            
+            cancelBtn.addEventListener('mouseover', () => {
+                cancelBtn.style.background = 'rgba(211, 47, 47, 0.1)';
+            });
+            
+            cancelBtn.addEventListener('mouseout', () => {
+                cancelBtn.style.background = 'var(--card-bg)';
+            });
+        });
+
+        // Menu item clicks close sidebar
+        document.querySelectorAll('.menu-item:not(.settings-link)').forEach(item => {
+            item.addEventListener('click', () => {
+                sidebar.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+            });
+        });
+
+        // Load theme on page load
+        loadTheme();
     </script>
 
     <!-- Language Toggle Button -->
@@ -2580,3 +3402,6 @@
 
 </body>
 </html>
+
+
+
