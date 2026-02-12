@@ -780,6 +780,23 @@
             display: block;
         }
 
+        /* ==================== GREETING MESSAGE ==================== */
+        .greeting-message {
+            display: none;
+            background: rgba(33, 150, 243, 0.2);
+            border: 2px solid #2196F3;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #2196F3;
+            font-weight: 600;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        .greeting-message.show {
+            display: block;
+        }
+
         /* ==================== COMMENTS SECTION ==================== */
         .comments-section {
             margin-top: 35px;
@@ -2113,6 +2130,7 @@
 
             <div class="error-message" id="errorMessage"></div>
             <div class="success-message" id="successMessage" data-en="✓ Your suggestion has been submitted for review!" data-ar="✓ تم إرسال اقتراحك للمراجعة!">✓ Your suggestion has been submitted for review!</div>
+            <div class="greeting-message" id="greetingMessage" data-en="👋 Hello! Thanks for reaching out. How can we help you today?" data-ar="👋 مرحباً! شكراً لتواصلك معنا. كيف يمكننا مساعدتك اليوم؟">👋 Hello! Thanks for reaching out. How can we help you today?</div>
 
             <!-- Feedback Form -->
             <form class="feedback-form" id="feedbackForm">
@@ -2711,6 +2729,53 @@
             feedbackForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 await submitFeedback();
+            });
+
+            // Greeting detection for suggestion text input
+            const suggestionTextInput = document.getElementById('suggestionText');
+            const greetingMessage = document.getElementById('greetingMessage');
+            const GREETING_PATTERNS = ['hello', 'hi', 'hey', 'greetings', 'good morning', 'good afternoon', 'good evening'];
+            const MAX_GREETING_LENGTH = 50;
+            const GREETING_AUTO_HIDE_MS = 5000;
+            let greetingTimeout;
+
+            suggestionTextInput.addEventListener('input', (e) => {
+                const text = e.target.value.trim().toLowerCase();
+                
+                // Check if the text matches any greeting pattern
+                // Supports greetings with common punctuation (space, comma, exclamation, question, period)
+                const isGreeting = GREETING_PATTERNS.some(pattern => {
+                    return text === pattern || 
+                           text.startsWith(pattern + ' ') || 
+                           text.startsWith(pattern + ',') ||
+                           text.startsWith(pattern + '!') ||
+                           text.startsWith(pattern + '?') ||
+                           text.startsWith(pattern + '.');
+                });
+
+                if (isGreeting && text.length < MAX_GREETING_LENGTH) {
+                    // Clear previous timeout if exists
+                    if (greetingTimeout) {
+                        clearTimeout(greetingTimeout);
+                    }
+                    
+                    // Show greeting message
+                    greetingMessage.classList.add('show');
+                    
+                    // Auto-hide after configured time
+                    greetingTimeout = setTimeout(() => {
+                        greetingMessage.classList.remove('show');
+                    }, GREETING_AUTO_HIDE_MS);
+                } else {
+                    // Hide greeting message immediately
+                    greetingMessage.classList.remove('show');
+                    
+                    // Clear any pending timeout
+                    if (greetingTimeout) {
+                        clearTimeout(greetingTimeout);
+                        greetingTimeout = null;
+                    }
+                }
             });
 
             // Admin login modal
